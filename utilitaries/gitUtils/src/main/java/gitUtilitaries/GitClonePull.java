@@ -1,13 +1,13 @@
 package gitUtilitaries;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- * Git cweimporter class
+ * Git importer class
  */
 public class GitClonePull {
 

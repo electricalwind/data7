@@ -61,10 +61,8 @@
         <module>data7-model</module>
         <module>utilitaries/gitUtils</module>
         <module>utilitaries/misc</module>
-        <module>cwe/model</module>
-        <module>cwe/importer</module>
-        <module>cve/importer</module>
-        <module>cve/projects</module>
+        <module>importer/cve</module>
+        <module>importer/cwe</module>
     </modules>
 
     <build>
