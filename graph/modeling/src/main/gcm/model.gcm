@@ -1,0 +1,44 @@
+index CWEs : CWE using id
+
+index years : Year using id
+
+index projects : Project using name
+
+class CWE {
+    att id : Int
+    att description : String
+    rel childOf : CWE
+    rel cves : CVE oppositeOf cwe
+}
+
+class Year {
+    att id : Int
+    index cves : CVE using id oppositeOf year
+}
+
+class CVE {
+    att id : Int
+    rel year : Year oppositeOf cves
+    rel cwe : CWE oppositeOf cves
+    att description : String
+    att score : String
+    att bugIds : StringArray
+    rel project : Project oppositeOf cves
+    index patches : Commit using hash oppositeOf vulnerability
+}
+
+class Project {
+    att name : String
+    rel cves : CVE oppositeOf project
+}
+
+class Commit {
+    att hash : String
+    att description : String
+    rel modification : Change
+    rel vulnerability : CVE oppositeOf patches
+}
+
+class Change {
+
+}

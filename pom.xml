@@ -58,11 +58,11 @@
     </developers>
 
     <modules>
-        <module>data7-model</module>
         <module>utilitaries/gitUtils</module>
         <module>utilitaries/misc</module>
         <module>importer/cve</module>
         <module>importer/cwe</module>
+        <module>graph/modeling</module>
     </modules>
 
     <build>

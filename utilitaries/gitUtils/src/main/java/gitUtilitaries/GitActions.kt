@@ -65,6 +65,7 @@ class GitActions {
      * @throws FileNotFoundException
      * @throws NoSuchElementException
      */
+    @Throws(IOException::class)
     fun retrievingFileFromSpecificCommit(commit: String, path: String): String? {
         val treeId = repo.resolve("$commit^{tree}") ?: throw NoSuchElementException("the hash commit can not be resolved")
 
@@ -312,6 +313,7 @@ class GitActions {
      *
      * @return [List<String>] of the files
      */
+    @Throws(IOException::class)
     fun getListOfModifiedFile(hash: String, pattern: String? = null): List<String> {
         val listOfModifiedFile = ArrayList<String>()
 
@@ -346,7 +348,8 @@ class GitActions {
     /**
      * Method to retireve the message of a given commit
      */
-    fun getCommitMessage(hash: String): String {
+    @Throws(IOException::class)
+    fun getCommitMessage(hash: String): String{
         val revWalk = RevWalk(repo)
         val commitId = repo.resolve(hash)
         val commit = revWalk.parseCommit(commitId)
@@ -356,6 +359,7 @@ class GitActions {
     /**
      * Method to retrieve the time of a commit
      */
+    @Throws(IOException::class)
     fun getTimeCommit(hash: String): Int {
         val revWalk = RevWalk(repo)
         val commitId = repo.resolve(hash)
