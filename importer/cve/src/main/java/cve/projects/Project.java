@@ -1,6 +1,8 @@
 package cve.projects;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
     private final String name;
     private final String onlineRepository;
     private final String regexpOnlineRepo;

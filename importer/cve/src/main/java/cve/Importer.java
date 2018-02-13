@@ -138,7 +138,15 @@ public class Importer {
         Data7 data7 = createDataset(CProjects.LINUX_KERNEL);
         Exporter.toXml(data7.getVulnerabilitySet());
         Exporter.toBinary(data7);
-        int i = 0;
+        data7 = createDataset(CProjects.WIRESHARK);
+        Exporter.toXml(data7.getVulnerabilitySet());
+        Exporter.toBinary(data7);
+        data7 = createDataset(CProjects.OPEN_SSL);
+        Exporter.toXml(data7.getVulnerabilitySet());
+        Exporter.toBinary(data7);
+        data7 = createDataset(CProjects.SYSTEMD);
+        Exporter.toXml(data7.getVulnerabilitySet());
+        Exporter.toBinary(data7);
     }
 
 

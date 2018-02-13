@@ -52,7 +52,7 @@ public class Exporter {
 
                     Element cve = doc.createElement("cve");
                     cve.setAttribute("id", vuln.getKey());
-                    cve.setAttribute("last_modified", String.valueOf(vuln.getValue().getLastModified()));
+                    cve.setAttribute("last_modified", String.valueOf(vuln.getValue().getLastModified()/1000));
                     rootElement.appendChild(cve);
 
                     Element cwe = doc.createElement("cwe");
