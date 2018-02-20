@@ -6,17 +6,30 @@
 
     <parent>
         <groupId>lu.jimenez.research</groupId>
-        <artifactId>data7</artifactId>
+        <artifactId>data7-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 
-    <groupId>lu.jimenez.research</groupId>
-    <artifactId>miscUtils</artifactId>
+    <artifactId>data7-miscUtils</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <kotlin.version>1.2.10</kotlin.version>
+        <kotlin.version>1.2.20</kotlin.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

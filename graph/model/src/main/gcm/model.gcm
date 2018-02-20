@@ -1,0 +1,59 @@
+index Cwes : CWENode using identifier
+
+index Years : YearNode using year
+
+index Projects : ProjectNode using name
+
+class CWENode {
+    @timeSensitivity = (0, -1)
+    att identifier : String
+    att name : String
+    att description : String
+    rel childOf : CWENode
+    index cves : CVENode using identifier oppositeOf cwe
+}
+
+class YearNode {
+    @timeSensitivity = (0, -1)
+    att year : Int
+    index cves : CVENode using identifier
+}
+
+class CVENode {
+    att identifier : String
+    rel category : CWENode oppositeOf cves
+    att description : String
+    att score : String
+    att bugIds : StringArray
+    rel project : ProjectNode oppositeOf cves
+    index patches : CommitNode using hash oppositeOf vulnerability
+}
+
+class ProjectNode {
+    @timeSensitivity = (0, -1)
+    att name : String
+    index cves : CVENode using identifier oppositeOf project
+    rel root : DirectoryNode
+}
+
+class CommitNode {
+    @timeSensitivity = (0, -1)
+    att hash : String
+    att description : String
+    rel modification : FileNode
+    rel vulnerability : CVENode oppositeOf patches
+}
+
+class ContentNode {
+    att name : String
+    rel parent : ContentNode
+}
+
+class DirectoryNode extends ContentNode {
+    @timeSensitivity = (0, -1)
+    rel contents : ContentNode
+}
+
+class FileNode extends ContentNode {
+    att content : String
+}

@@ -5,29 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>lu.jimenez.research</groupId>
-    <artifactId>data7</artifactId>
+    <artifactId>data7-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <url>https://github.com/electricalwind/data7</url>
-    <dependencies>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.8.0.201706111038-r</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 
     <description>dataset</description>
@@ -41,7 +23,6 @@
 
     <properties>
         <header.path>${basedir}/HEADER</header.path>
-        <kotlin.version>1.2.10</kotlin.version>
     </properties>
 
     <developers>
@@ -60,9 +41,9 @@
     <modules>
         <module>utilitaries/gitUtils</module>
         <module>utilitaries/misc</module>
-        <module>importer/cve</module>
-        <module>importer/cwe</module>
-        <module>graph/modeling</module>
+        <module>data7</module>
+        <module>graph/model</module>
+        <module>graph/greycat</module>
     </modules>
 
     <build>
@@ -70,7 +51,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <id>default-compile</id>
@@ -102,4 +83,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>datathings.public</id>
+            <url>https://registry.datathings.com/repository/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>datathings.public</id>
+            <url>https://registry.datathings.com/repository/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
