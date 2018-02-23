@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lu.jimenez.research</groupId>
+        <artifactId>data7-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
+    </parent>
+
+    <properties>
+        <!-- replace by the desired GreyCat version -->
+        <greycat.version>10.8</greycat.version>
+    </properties>
+
+    <artifactId>data7-greycat</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>lu.jimenez.research</groupId>
+            <artifactId>data7</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datathings</groupId>
+            <artifactId>greycat-rocksdb</artifactId>
+            <version>${greycat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>lu.jimenez.research</groupId>
+            <artifactId>data7-greycatModel</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datathings</groupId>
+            <artifactId>greycat-ml</artifactId>
+            <version>11-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>
