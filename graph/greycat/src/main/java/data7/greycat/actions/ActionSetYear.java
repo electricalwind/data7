@@ -27,24 +27,22 @@ public class ActionSetYear implements Action {
                 ctx.endTask(ctx.result(), new IllegalArgumentException("Invalid cve " + cveNode.getIdentifier()));
             }
             String year = matcher.group(1);
-            Years.find(ctx.graph(), ctx.world(), ctx.time(), year, result -> {
-                handleTraverseOneResult(ctx,
-                        result,
-                        () -> {
-                            YearNode node = YearNode.create(0, BEGINNING_OF_TIME, ctx.graph());
-                            node.setYear(Integer.valueOf(year));
-                            node.indexCves(cveNode);
-                            Years.update(node, res -> {
-                                node.free();
-                                ctx.continueTask();
-                            });
-                        },
-                        () -> {
-                            result[0].indexCves(cveNode);
-                            result[0].free();
+            Years.find(ctx.graph(), ctx.world(), ctx.time(), year, result -> handleTraverseOneResult(ctx,
+                    result,
+                    () -> {
+                        YearNode node = YearNode.create(0, BEGINNING_OF_TIME, ctx.graph());
+                        node.setYear(Integer.valueOf(year));
+                        node.indexCves(cveNode);
+                        Years.update(node, res -> {
+                            node.free();
                             ctx.continueTask();
                         });
-            });
+                    },
+                    () -> {
+                        result[0].indexCves(cveNode);
+                        result[0].free();
+                        ctx.continueTask();
+                    }));
 
         } else {
             ctx.endTask(ctx.result(), new IllegalArgumentException("Invalid current result to call this action"));
