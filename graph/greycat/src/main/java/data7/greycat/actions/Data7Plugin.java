@@ -4,9 +4,7 @@ import greycat.Graph;
 import greycat.Type;
 import greycat.plugin.Plugin;
 
-import static data7.greycat.actions.Data7Actions.getProjectNode;
-import static data7.greycat.actions.Data7Actions.getVulnerabilityNode;
-import static data7.greycat.actions.Data7Actions.traverseDirectoryNode;
+import static data7.greycat.actions.Data7Actions.*;
 
 public class Data7Plugin implements Plugin {
     @Override
@@ -29,6 +27,12 @@ public class Data7Plugin implements Plugin {
                 .setParams(Type.STRING)
                 .setDescription("Traverse a directory to the next indicated one")
                 .setFactory(params -> traverseDirectoryNode((String) params[0]));
+
+        graph.actionRegistry()
+                .getOrCreateDeclaration(ActionGetOrCreateFile.NAME)
+                .setParams(Type.STRING)
+                .setDescription("")
+                .setFactory(params -> getFileNode((String) params[0]));
     }
 
     @Override

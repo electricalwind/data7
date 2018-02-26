@@ -44,4 +44,11 @@ public class Data7Actions {
         return new ActionTraverseDirectory(next,ActionTraverseDirectory.CREATE_DIRECTORY);
     }
 
+    public static Action getOrCreateFile(String fileFullpath){
+        return new ActionGetOrCreateFile(fileFullpath, true) ;
+    }
+
+    public static Action getFileNode(String fileFullpath){
+        return new ActionGetOrCreateFile(fileFullpath, false) ;
+    }
 }
