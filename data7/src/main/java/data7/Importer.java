@@ -4,6 +4,7 @@ import data7.importer.cve.CVEImporter;
 import data7.importer.cve.DatasetUpdateListener;
 import data7.model.CWE;
 import data7.model.Data7;
+import data7.model.project.CProjects;
 import data7.model.project.Project;
 
 import javax.xml.bind.JAXBException;
@@ -12,9 +13,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import static data7.Resources.CWE_OBJ;
-import static data7.Resources.DATA7_OBJ;
-import static data7.Resources.PATH_TO_BINARY;
+import static data7.Resources.*;
 import static data7.importer.cwe.CWEImporter.loadCWEFromBinary;
 import static data7.importer.cwe.CWEImporter.retrieveCWEOnline;
 
@@ -37,6 +36,10 @@ public class Importer {
         } else {
             return CVEImporter.createDataset(project, listeners);
         }
+    }
+
+    public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException {
+        Exporter.saveDataset(updateOrCreateDatasetFor(CProjects.SYSTEMD));
     }
 
 }

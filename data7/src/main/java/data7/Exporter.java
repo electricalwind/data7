@@ -78,7 +78,7 @@ public class Exporter {
                     cve.appendChild(description);
 
                     Element bugsId = doc.createElement("bugs");
-                    for (String id : vuln.getValue().getBugId()) {
+                    for (String id : vuln.getValue().getBugIds()) {
                         Element bugId = doc.createElement("id");
                         bugId.appendChild(doc.createTextNode(id));
                         bugsId.appendChild(bugId);

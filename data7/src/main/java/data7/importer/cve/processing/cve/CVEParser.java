@@ -94,7 +94,7 @@ public class CVEParser implements Callable<List<CVE>> {
                         break;
                     case "vulnerable-configuration":
                         xmlEvent = eventReader.nextEvent();
-                        while (functionSOft(xmlEvent)) {
+                        while (functionSOftConfig(xmlEvent)) {
                             if (xmlEvent.isStartElement()) {
                                 Attribute softAtt = xmlEvent.asStartElement().getAttributeByName(new QName("name"));
                                 if (softAtt != null) {
@@ -112,7 +112,7 @@ public class CVEParser implements Callable<List<CVE>> {
                         break;
                     case "vulnerable-software-list":
                         xmlEvent = eventReader.nextEvent();
-                        while (functionSOft(xmlEvent)) {
+                        while (functionSOftList(xmlEvent)) {
                             if (!xmlEvent.isStartElement() && !xmlEvent.isEndElement()) {
                                 Matcher m = softwareMatch(xmlEvent.asCharacters().getData());
                                 if (m.find()) {
@@ -216,9 +216,18 @@ public class CVEParser implements Callable<List<CVE>> {
      * @param xmlEvent xml event under consideration
      * @return true if the xml event is different from vulnerable-Software-list
      */
-    private boolean functionSOft(XMLEvent xmlEvent) {
+    private boolean functionSOftList(XMLEvent xmlEvent) {
         return !xmlEvent.isEndElement() || !xmlEvent.asEndElement().getName().getLocalPart().equals("vulnerable-software-list");
     }
 
+    /**
+     * Sub Method
+     *
+     * @param xmlEvent xml event under consideration
+     * @return true if the xml event is different from vulnerable-Software-list
+     */
+    private boolean functionSOftConfig(XMLEvent xmlEvent) {
+        return !xmlEvent.isEndElement() || !xmlEvent.asEndElement().getName().getLocalPart().equals("vulnerable-configuration");
+    }
 
 }
