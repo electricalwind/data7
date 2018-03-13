@@ -4,6 +4,7 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.security.Security
+import java.util.regex.Pattern
 import java.util.zip.Adler32
 import java.util.zip.CheckedInputStream
 import java.util.zip.ZipEntry
@@ -20,7 +21,7 @@ object Misc {
      */
     @JvmStatic
     fun downloadFromURL(link: String, savingPath: String) {
-        if(link.split(":").first().last() =='s'){
+        if (link.split(":").first().last() == 's') {
             System.setProperty("java.protocol.handler.pkgs",
                     "com.sun.net.ssl.internal.www.protocol")
             Security.addProvider(com.sun.net.ssl.internal.ssl.Provider())
@@ -84,6 +85,7 @@ object Misc {
         zis.close()
         return ch
     }
+
     /**
      * Function normalizing a folder path, i.e., adding the missing / or \ depending on the os
      *
@@ -94,6 +96,28 @@ object Misc {
             return path + System.getProperty("file.separator")
         else
             return path
+    }
+
+    /**
+     * Method to generate the list of File present in a directory and its subdirectory with the given extension
+     *
+     * @param folder repository to analyze
+     * @param extension file extension (default = C files)
+     *
+     * @return List<String> list of the files
+     */
+    @JvmStatic
+    fun recursiveListOfFilesOfADirectory(folder: String, extension: String = ".*"): List<String> {
+        val pattern = Pattern.compile(extension);
+        try {
+            return File(folder).walk().asSequence().filter { path -> path.isFile }.map { path -> path.toString() }
+                    .map { path -> path.replace(folder, "") }
+                    .filter { path -> pattern.matcher(path).find() }
+                    .toMutableList()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return mutableListOf()
+        }
     }
 
 }

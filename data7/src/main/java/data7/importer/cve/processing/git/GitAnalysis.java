@@ -19,6 +19,7 @@ import java.util.concurrent.*;
 
 import static data7.Resources.FILE_EXTENSION;
 import static data7.Resources.NB_THREADS;
+import static data7.Utils.generateCommitOfInterest;
 
 
 public class GitAnalysis {
@@ -86,7 +87,7 @@ public class GitAnalysis {
             for (String cve : cves) {
                 Vulnerability vulnerability = dataset.getVulnerabilitySet().getVulnerabilityDataset().get(cve);
                 if (!vulnerability.getPatchingCommits().containsKey(result.getCommit().getName())) {
-                    Commit commit = generateCommitOfInterest(result.getCommit());
+                    Commit commit = generateCommitOfInterest(git, result.getCommit());
                     vulnerability.getPatchingCommits().put(result.getCommit().getName(), commit);
                     commitAddedToVulnerabilityEvent(vulnerability, result.getCommit().getName());
                 }
@@ -94,7 +95,6 @@ public class GitAnalysis {
                     bugAddedToVulnerabilityEvent(vulnerability, result.getBugId());
                 }
             }
-
         }
         if (dataset.getBugToHash().containsKey(result.getBugId())) {
             dataset.getBugToHash().get(result.getBugId()).add(result.getCommit().getName());
@@ -108,7 +108,7 @@ public class GitAnalysis {
     private void handleCVEMatch(MatchingCommit result) {
         if (dataset.getVulnerabilitySet().getVulnerabilityDataset().containsKey(result.getCve())) {
             Vulnerability vulnerability = dataset.getVulnerabilitySet().getVulnerabilityDataset().get(result.getCve());
-            Commit commit = generateCommitOfInterest(result.getCommit());
+            Commit commit = generateCommitOfInterest(git, result.getCommit());
             vulnerability.getPatchingCommits().put(result.getCommit().getName(), commit);
             if (result.getBugId() != null) {
                 vulnerability.getBugIds().add(result.getBugId());
@@ -126,31 +126,6 @@ public class GitAnalysis {
         }
     }
 
-
-    private Commit generateCommitOfInterest(RevCommit commit) {
-        try {
-            String hash = commit.getName();
-            String commitMessage = commit.getFullMessage();
-            int timestamp = commit.getCommitTime();
-            List<String> modifiedFiles = git.getListOfModifiedFile(commit.getName(), FILE_EXTENSION);
-            List<FileFix> fixes = new ArrayList<>();
-            for (String modifiedFile : modifiedFiles) {
-                String newName = modifiedFile;
-                GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
-                String oldname = previousCommit.getFilePath();
-                String oldHash = previousCommit.getRevCommit().getName();
-                String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
-                String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
-                FileInterest old = new FileInterest(oldContent, oldname);
-                FileInterest newer = new FileInterest(newContent, newName);
-                fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
-            }
-            return new Commit(hash, commitMessage, timestamp, fixes);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            return null;
-        }
-    }
 
     private void bugAddedToVulnerabilityEvent(Vulnerability vulnerability, String bugId) {
         for (DatasetUpdateListener listener : listeners) {

@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static data7.Resources.FILE_EXTENSION;
+import static data7.Utils.generateCommitOfInterest;
 
 
 /**
@@ -125,7 +126,7 @@ public class CVEAnalysis {
 
 
     private void addCommitOfInterest(Vulnerability vulnerability, String hash) {
-        Commit commit = generateCommitOfInterest(hash);
+        Commit commit = generateCommitOfInterest(git, hash);
         if (commit != null) {
             vulnerability.getPatchingCommits().put(hash, commit);
             String bugId = checkCommitForBugId(commit.getMessage());
@@ -154,10 +155,10 @@ public class CVEAnalysis {
     private void addBugToVuln(Vulnerability vulnerability, String bugId) {
         if (dataset.getBugToHash().containsKey(bugId)) {
             for (String hash : dataset.getBugToHash().get(bugId)) {
-                vulnerability.getPatchingCommits().put(hash, generateCommitOfInterest(hash));
+                vulnerability.getPatchingCommits().put(hash, generateCommitOfInterest(git, hash));
             }
             vulnerability.getBugIds().add(bugId);
-            bugAddedToVulnerabilityEvent(vulnerability,bugId);
+            bugAddedToVulnerabilityEvent(vulnerability, bugId);
         }
         if (dataset.getBugToCve().containsKey(bugId)) {
             dataset.getBugToCve().get(bugId).add(vulnerability.getCve());
@@ -182,34 +183,6 @@ public class CVEAnalysis {
     }
 
 
-    private Commit generateCommitOfInterest(String hash) {
-        try {
-            String commitMessage = git.getCommitMessage(hash);
-            int timestamp = git.getTimeCommit(hash);
-            List<String> modifiedFiles = git.getListOfModifiedFile(hash, FILE_EXTENSION);
-            List<FileFix> fixes = new ArrayList<>();
-            for (String modifiedFile : modifiedFiles) {
-                String newName = modifiedFile;
-                GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
-                String oldname = previousCommit.getFilePath();
-                String oldHash = previousCommit.getRevCommit().getName();
-                String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
-                String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
-                FileInterest old = new FileInterest(oldContent, oldname);
-                FileInterest newer = new FileInterest(newContent, newName);
-                fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
-            }
-            dataset.getAlreadyProcessedHash().add(hash);
-            return new Commit(hash, commitMessage, timestamp, fixes);
-        } catch (IOException | NullPointerException e) {
-            System.err.println(hash);
-            System.err.println(e.getMessage());
-            return null;
-        }
-
-    }
-
-
     private void newVulnerabilityEvent(Vulnerability vulnerability) {
         for (DatasetUpdateListener listener : listeners) {
             listener.addVulnerability(vulnerability);
@@ -218,7 +191,7 @@ public class CVEAnalysis {
 
     private void bugAddedToVulnerabilityEvent(Vulnerability vulnerability, String bugId) {
         for (DatasetUpdateListener listener : listeners) {
-            listener.bugAddedTo(vulnerability,bugId);
+            listener.bugAddedTo(vulnerability, bugId);
         }
     }
 
@@ -240,8 +213,8 @@ public class CVEAnalysis {
         }
     }
 
-    public static void proceedWithAnalysis(List<CVE> cveList, Data7 dataset, DatasetUpdateListener[] listeners, GitActions git){
-       new CVEAnalysis(cveList, dataset, listeners, git).process();
+    public static void proceedWithAnalysis(List<CVE> cveList, Data7 dataset, DatasetUpdateListener[] listeners, GitActions git) {
+        new CVEAnalysis(cveList, dataset, listeners, git).process();
     }
 
 }

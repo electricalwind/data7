@@ -82,11 +82,11 @@ public class CVEParser implements Callable<List<CVE>> {
                         break;
                     case "last-modified-datetime":
                         xmlEvent = eventReader.nextEvent();
-                        lastModified = Utils.dateToLong(xmlEvent.asCharacters().getData());
+                        lastModified = Utils.dateToLong(xmlEvent.asCharacters().getData())/1000;
                         break;
                     case "published-datetime":
                         xmlEvent = eventReader.nextEvent();
-                        creationTime = Utils.dateToLong(xmlEvent.asCharacters().getData());
+                        creationTime = Utils.dateToLong(xmlEvent.asCharacters().getData())/1000;
                         break;
                     case "summary":
                         xmlEvent = eventReader.nextEvent();
@@ -126,7 +126,7 @@ public class CVEParser implements Callable<List<CVE>> {
                         break;
                     case "cwe":
                         Attribute idAttrs = startElement.getAttributeByName(new QName("id"));
-                        cwe = idAttrs.getValue();
+                        cwe = idAttrs.getValue().substring(4);
                         break;
                     case "score":
                         xmlEvent = eventReader.nextEvent();
