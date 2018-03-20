@@ -26,22 +26,24 @@ public class Utils {
         return date.getTime();
     }
 
-    public static Commit generateCommitOfInterest(GitActions git, String hash) {
+    public static Commit generateCommitOfInterest(GitActions git, String hash, boolean filter) {
         try {
             String commitMessage = git.getCommitMessage(hash);
             int timestamp = git.getTimeCommit(hash);
             List<String> modifiedFiles = git.getListOfModifiedFile(hash, FILE_EXTENSION);
             List<FileFix> fixes = new ArrayList<>();
             for (String modifiedFile : modifiedFiles) {
-                String newName = modifiedFile;
-                GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
-                String oldname = previousCommit.getFilePath();
-                String oldHash = previousCommit.getRevCommit().getName();
-                String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
-                String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
-                FileInterest old = new FileInterest(oldContent, oldname);
-                FileInterest newer = new FileInterest(newContent, newName);
-                fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
+                if (!filter || !modifiedFile.toLowerCase().contains("test")) {
+                    String newName = modifiedFile;
+                    GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
+                    String oldname = previousCommit.getFilePath();
+                    String oldHash = previousCommit.getRevCommit().getName();
+                    String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
+                    String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
+                    FileInterest old = new FileInterest(oldContent, oldname);
+                    FileInterest newer = new FileInterest(newContent, newName);
+                    fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
+                }
             }
             return new Commit(hash, commitMessage, timestamp, fixes);
         } catch (IOException | NullPointerException e) {
@@ -51,7 +53,7 @@ public class Utils {
         }
     }
 
-    public static Commit generateCommitOfInterest(GitActions git, RevCommit commit) {
+    public static Commit generateCommitOfInterest(GitActions git, RevCommit commit,boolean filter) {
         try {
             String hash = commit.getName();
             String commitMessage = commit.getFullMessage();
@@ -59,15 +61,17 @@ public class Utils {
             List<String> modifiedFiles = git.getListOfModifiedFile(commit.getName(), FILE_EXTENSION);
             List<FileFix> fixes = new ArrayList<>();
             for (String modifiedFile : modifiedFiles) {
-                String newName = modifiedFile;
-                GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
-                String oldname = previousCommit.getFilePath();
-                String oldHash = previousCommit.getRevCommit().getName();
-                String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
-                String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
-                FileInterest old = new FileInterest(oldContent, oldname);
-                FileInterest newer = new FileInterest(newContent, newName);
-                fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
+                if (!filter || !modifiedFile.toLowerCase().contains("test")) {
+                    String newName = modifiedFile;
+                    GitActions.NamedCommit previousCommit = git.previousCommitImpactingAFile(modifiedFile, hash);
+                    String oldname = previousCommit.getFilePath();
+                    String oldHash = previousCommit.getRevCommit().getName();
+                    String oldContent = git.retrievingFileFromSpecificCommit(oldHash, oldname);
+                    String newContent = git.retrievingFileFromSpecificCommit(hash, newName);
+                    FileInterest old = new FileInterest(oldContent, oldname);
+                    FileInterest newer = new FileInterest(newContent, newName);
+                    fixes.add(new FileFix(old, newer, oldHash, git.getTimeCommit(oldHash)));
+                }
             }
             return new Commit(hash, commitMessage, timestamp, fixes);
         } catch (IOException e) {

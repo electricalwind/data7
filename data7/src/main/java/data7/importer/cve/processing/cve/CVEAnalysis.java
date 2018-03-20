@@ -126,7 +126,7 @@ public class CVEAnalysis {
 
 
     private void addCommitOfInterest(Vulnerability vulnerability, String hash) {
-        Commit commit = generateCommitOfInterest(git, hash);
+        Commit commit = generateCommitOfInterest(git, hash,true);
         if (commit != null) {
             vulnerability.getPatchingCommits().put(hash, commit);
             String bugId = checkCommitForBugId(commit.getMessage());
@@ -155,7 +155,7 @@ public class CVEAnalysis {
     private void addBugToVuln(Vulnerability vulnerability, String bugId) {
         if (dataset.getBugToHash().containsKey(bugId)) {
             for (String hash : dataset.getBugToHash().get(bugId)) {
-                vulnerability.getPatchingCommits().put(hash, generateCommitOfInterest(git, hash));
+                vulnerability.getPatchingCommits().put(hash, generateCommitOfInterest(git, hash,true));
             }
             vulnerability.getBugIds().add(bugId);
             bugAddedToVulnerabilityEvent(vulnerability, bugId);

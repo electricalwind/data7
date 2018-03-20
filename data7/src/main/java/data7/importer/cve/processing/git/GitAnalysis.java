@@ -87,7 +87,7 @@ public class GitAnalysis {
             for (String cve : cves) {
                 Vulnerability vulnerability = dataset.getVulnerabilitySet().getVulnerabilityDataset().get(cve);
                 if (!vulnerability.getPatchingCommits().containsKey(result.getCommit().getName())) {
-                    Commit commit = generateCommitOfInterest(git, result.getCommit());
+                    Commit commit = generateCommitOfInterest(git, result.getCommit(),true);
                     vulnerability.getPatchingCommits().put(result.getCommit().getName(), commit);
                     commitAddedToVulnerabilityEvent(vulnerability, result.getCommit().getName());
                 }
@@ -108,7 +108,7 @@ public class GitAnalysis {
     private void handleCVEMatch(MatchingCommit result) {
         if (dataset.getVulnerabilitySet().getVulnerabilityDataset().containsKey(result.getCve())) {
             Vulnerability vulnerability = dataset.getVulnerabilitySet().getVulnerabilityDataset().get(result.getCve());
-            Commit commit = generateCommitOfInterest(git, result.getCommit());
+            Commit commit = generateCommitOfInterest(git, result.getCommit(),true);
             vulnerability.getPatchingCommits().put(result.getCommit().getName(), commit);
             if (result.getBugId() != null) {
                 vulnerability.getBugIds().add(result.getBugId());

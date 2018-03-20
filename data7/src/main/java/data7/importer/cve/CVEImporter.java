@@ -6,6 +6,8 @@ import data7.importer.cve.processing.cve.CVEAnalysis;
 import data7.importer.cve.processing.cve.CVEParser;
 import data7.importer.cve.processing.git.GitAnalysis;
 import data7.model.Data7;
+import data7.model.change.Commit;
+import data7.model.project.CProjects;
 import data7.model.project.Project;
 import gitUtilitaries.GitActions;
 import miscUtils.Misc;
@@ -14,9 +16,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import static data7.Resources.*;
 import static data7.Utils.dateToLong;
@@ -147,6 +149,19 @@ public class CVEImporter {
         }
     }
 
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        Data7 data7 = loadDataset(new File(PATH_TO_BINARY + CProjects.OPEN_SSL.getName() + DATA7_OBJ));
+        Set<String> files = new HashSet<>();
+        Set<Map.Entry<String, Commit>> k =data7
+                .getVulnerabilitySet()
+                .getVulnerabilityDataset()
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getValue().getPatchingCommits().entrySet())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        int i =0;
+    }
 
 /**    public static void main(String[] args) throws IOException{
  long time = System.currentTimeMillis();

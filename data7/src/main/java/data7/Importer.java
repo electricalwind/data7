@@ -30,15 +30,22 @@ public class Importer {
 
 
     public static Data7 updateOrCreateDatasetFor(Project project, DatasetUpdateListener... listeners) throws ParseException, IOException, ClassNotFoundException {
-        File data7Binary = new File(PATH_TO_BINARY + project.getName() + DATA7_OBJ);
-        if (data7Binary.exists()) {
-            return CVEImporter.updateDataset(data7Binary, listeners);
+        if (project != null) {
+            File data7Binary = new File(PATH_TO_BINARY + project.getName() + DATA7_OBJ);
+            if (data7Binary.exists()) {
+                return CVEImporter.updateDataset(data7Binary, listeners);
+            } else {
+                return CVEImporter.createDataset(project, listeners);
+            }
         } else {
-            return CVEImporter.createDataset(project, listeners);
+            throw new RuntimeException("Project is null");
         }
     }
 
     public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException {
+        Exporter.saveDataset(updateOrCreateDatasetFor(CProjects.LINUX_KERNEL));
+        Exporter.saveDataset(updateOrCreateDatasetFor(CProjects.OPEN_SSL));
+        Exporter.saveDataset(updateOrCreateDatasetFor(CProjects.WIRESHARK));
         Exporter.saveDataset(updateOrCreateDatasetFor(CProjects.SYSTEMD));
     }
 

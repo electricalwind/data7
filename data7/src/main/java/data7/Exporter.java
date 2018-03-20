@@ -151,7 +151,7 @@ public class Exporter {
      * @throws IOException
      */
     public static void saveDataset(Data7 data7) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj");
+        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj",false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
         oos.close();
@@ -159,7 +159,7 @@ public class Exporter {
     }
 
     public static void saveCWEList(List<CWE> cweList) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + CWE_OBJ);
+        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + CWE_OBJ,false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(cweList);
         oos.close();

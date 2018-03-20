@@ -125,7 +125,63 @@ public class CProjects {
         return versions;
     }
 
+    public static final TreeMap<Long, String> SYSTEMD_VERSION() {
+        TreeMap<Long, String> versions = new TreeMap<>();
+        versions.put(1278453600L, "v1");
+        versions.put(1284415200L, "v10");
+        versions.put(1299538800L, "v20");
+        versions.put(1310508000L, "v30");
+        versions.put(1328569200L, "v40");
+        versions.put(1348092000L, "v190");
+        versions.put(1364511600L, "v200");
+        versions.put(1393196400L, "v210");
+        versions.put(1432159200L, "v220");
+        versions.put(1463868000L, "v230");
+        versions.put(1507240800L, "v235");
+        return versions;
+    }
 
 
+    public static final TreeMap<Long, String> WIRESHARK_VERSION() {
+        TreeMap<Long, String> versions = new TreeMap<>();
+        versions.put(905909955L, "ethereal-0.3.15");
+        versions.put(911433534L, "ethereal-0.5.0");
+        versions.put(925500716L, "ethereal-0.6.0");
+        versions.put(933717600L, "ethereal-0.7.0");
+        versions.put(946508400L, "ethereal-0.8.0");
+        versions.put(1009148400L, "ethereal-0.9.0");
+        versions.put(1071270000L, "ethereal-0.10.0");
+        versions.put(1145829600L, "ethereal-0.99.0");
+        versions.put(1206745200L, "wireshark-1.0.0");
+        versions.put(1245103200L, "wireshark-1.2.0");
+        versions.put(1283119200L, "wireshark-1.4.0");
+        versions.put(1307397600L, "wireshark-1.6.0");
+        versions.put(1340229600L, "wireshark-1.8.0");
+        versions.put(1370383200L, "wireshark-1.10.0");
+        versions.put(1392159600L, "v1.11.0");
+        versions.put(1406757600L, "v1.12.0");
+        versions.put(1412632800L, "v1.99.0");
+        versions.put(1447801200L, "v2.0.0");
+        versions.put(1465336800L, "v2.1.0");
+        versions.put(1473199200L, "v2.2.0");
+        versions.put(1500415200L, "v2.4.0");
+        versions.put(1517871600L, "v2.5.0");
 
+        return versions;
+    }
+
+    public static final TreeMap<Long, String> OPENSSL_VERSION() {
+        TreeMap<Long, String> versions = new TreeMap<>();
+        versions.put(927496800L, "OpenSSL_0_9_3");
+        versions.put(934149600L, "OpenSSL_0_9_4");
+        versions.put(959205600L, "OpenSSL_0_9_5");
+        versions.put(971128800L, "OpenSSL_0_9_6");
+        versions.put(1041289200L, "OpenSSL_0_9_7");
+        versions.put(1120514400L, "OpenSSL_0_9_8");
+        versions.put(1269813600L, "OpenSSL_1_0_0");
+        versions.put(1331679600L, "OpenSSL_1_0_1");
+        versions.put(1421881200L, "OpenSSL_1_0_2");
+        versions.put(1472076000L, "OpenSSL_1_1_0");
+        return versions;
+    }
 }
