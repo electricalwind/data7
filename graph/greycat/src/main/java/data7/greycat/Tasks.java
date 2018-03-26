@@ -4,143 +4,99 @@ import data7.greycatmodel.*;
 import data7.model.change.Commit;
 import data7.model.change.FileFix;
 import data7.model.vulnerability.Vulnerability;
-import greycat.*;
-import greycat.struct.StringArray;
+import greycat.Task;
+import greycat.TaskResult;
+import greycat.plugin.SchedulerAffinity;
+import greycat.struct.Relation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
 
-import static data7.greycat.Resources.PROJECT_VAR;
 import static data7.greycat.actions.Data7Actions.*;
-import static greycat.Constants.BEGINNING_OF_TIME;
 import static greycat.Tasks.newTask;
+import static greycat.Tasks.then;
 
 public class Tasks {
 
-    private static Task getYear(String cve) {
-        Matcher matcher = Utils.vulnerabilityMatch(cve);
-        matcher.find();
-        String year = matcher.group(1);
-        return newTask()
-                .readIndex(Years.META.name, year)
-                .ifThen(ctx -> ctx.result().size() == 0,
-                        newTask()
-                                .thenDo(ctx -> {
-                                    YearNode node = YearNode.create(0, BEGINNING_OF_TIME, ctx.graph());
-                                    node.setYear(Integer.valueOf(year));
-                                    Years.update(node, aBoolean -> ctx.continueWith(ctx.wrap(node)));
-                                })
-                );
-    }
 
-
-
-    private static Task findFile() {
-        //String[] path = file.split("/");
-        return newTask()
-                .setAsVar("File")
-                .readVar(PROJECT_VAR)
-                .traverse(ProjectNode.ROOT.name)
-                .ifThen(ctx -> ctx.result().size() == 0,
-                        newTask().thenDo(ctx -> {
-                            DirectoryNode node = DirectoryNode.create(0, BEGINNING_OF_TIME, ctx.graph());
-                            node.setName("/");
-                            ((ProjectNode) ctx.variable(PROJECT_VAR)).addToRoot(node);
-                            ctx.continueWith(ctx.wrap(node));
-                        }))
-                .defineAsVar("CurrentDirectory")
-                .loop("0", String.valueOf(path.length - 2),
-                        newTask()
-                                .readVar("CurrentDirectory")
-                                .traverse(DirectoryNode.CONTENTS.name)
-                                .thenDo(ctx -> {
-                                    int i = ctx.intVar("i");
-                                    String part = path[i];
-                                    TaskResult<Node> res = ctx.resultAsNodes();
-                                    DirectoryNode nextNode = null;
-                                    for (int k = 0; k < res.size(); k++) {
-                                        DirectoryNode directoryNode = (DirectoryNode) res.get(k);
-                                        if (directoryNode.getName().equals(part)) {
-                                            nextNode = directoryNode;
-                                        }
-                                    }
-                                    if (nextNode == null) {
-                                        DirectoryNode currentNode = (DirectoryNode) ctx.variable("CurrentDirectory");
-                                        nextNode = DirectoryNode.create(0, BEGINNING_OF_TIME, ctx.graph());
-                                        nextNode.setName(path[i]);
-                                        nextNode.addToParent(currentNode);
-                                        currentNode.addToContents(nextNode);
-                                    }
-                                    ctx.continueWith(ctx.wrap(nextNode));
-                                })
-                                .setAsVar("CurrentDirectory")
-                ).readVar("CurrentDirectory")
-                .travelInTime(String.valueOf(time))
-                .traverse(DirectoryNode.CONTENTS.name)
-                .thenDo(ctx -> {
-                    String filepart = path[path.length - 1];
-                    TaskResult<Node> res = ctx.resultAsNodes();
-                    FileNode fnode = null;
-                    for (int k = 0; k < res.size(); k++) {
-                        ContentNode cNode = (ContentNode) res.get(k);
-                        if (cNode.getName().equals(filepart)) {
-                            fnode = (FileNode) cNode;
-                        }
-                    }
-                    if (fnode == null) {
-                        DirectoryNode currentNode = (DirectoryNode) ctx.variable("CurrentDirectory");
-                        fnode = FileNode.create(0, ctx.time(), ctx.graph());
-                        fnode.setName(filepart);
-                        fnode.addToParent(currentNode);
-                        currentNode.addToContents(fnode);
-                    }
-                    ctx.continueWith(ctx.wrap(fnode));
-                });
-    }
-
-    protected static Task createVulnerability(Vulnerability vulnerability) {
+    protected static Task createVulnerability(Vulnerability vulnerability, String project) {
         List<Commit> commits = new ArrayList<>(vulnerability.getPatchingCommits().values());
-        return getYear(vulnerability.getCve())
-                .setAsVar("YEAR")
-                .then(createBasicVulnerability(vulnerability))
-                .setAsVar("Vulnerability")
-                .then(setCWE(vulnerability.getCwe()))
-                .then(setProject())
-                .then(setYear())
-                .loop("0", String.valueOf(commits.size()),
-                        newTask()
-                                .thenDo(ctx -> {
-                                    int i = ctx.intVar("i");
-                                    Commit commit = commits.get(i);
-                                    CommitNode node = CommitNode.create(ctx.world(), commit.getTimestamp(), ctx.graph());
-                                    node.setHash(commit.getHash());
-                                    node.setDescription(commit.getMessage());
-                                    ctx.defineVariable("commit", node);
-                                    node.addToVulnerability((CVENode) ctx.variable("Vulnerability").get(0), new Callback<CommitNode>() {
-                                        @Override
-                                        public void on(CommitNode commitNode) {
-                                            TaskResult taskResult = ctx.newResult();
-                                            taskResult.allocate(commit.getFixes().size());
-                                            for (FileFix fileFix : commit.getFixes()) {
-                                                taskResult.add(fileFix);
-                                            }
-                                            ctx.continueWith(taskResult);
-                                        }
-                                    });
-                                })
-                                .forEach(
-                                        newTask()
-                                                .setAsVar("fileFix")
-                                                .thenDo(ctx -> {
-                                                    FileFix fileFix = (FileFix) ctx.result().get(0);
-                                                    ctx.setTime(fileFix.getLastModified());
-                                                    ctx.continueWith(ctx.wrap(fileFix.getFileBefore().getFileContent()));
-                                                })
+        return
+                then(getOrCreateYearFor(vulnerability.getCve()))
+                        .then(createBasicVulnerability(vulnerability))
+                        .setAsVar("Vulnerability")
+                        .then(setProject(project))
+                        .then(getProjectNode(project))
+                        .setAsVar("PROJECT")
+                        .loop("0", String.valueOf(commits.size() - 1),
+                                newTask()
+                                        .thenDo(ctx -> {
+                                            int i = ctx.intVar("i");
+                                            Commit commit = commits.get(i);
+                                            CommitNode node = CommitNode.create(ctx.world(), commit.getTimestamp(), ctx.graph());
+                                            node.setHash(commit.getHash());
+                                            node.setDescription(commit.getMessage());
+                                            ctx.defineVariable("currentTime", ctx.time());
+                                            node.addToVulnerability((CVENode) ctx.variable("Vulnerability").get(0),
+                                                    commitNode -> {
+                                                        TaskResult taskResult = ctx.newResult();
+                                                        taskResult.allocate(commit.getFixes().size());
+                                                        for (FileFix fileFix : commit.getFixes()) {
+                                                            taskResult.add(fileFix);
+                                                        }
+                                                        ctx.continueWith(taskResult);
+                                                    });
+                                        })
+                                        .forEach(
+                                                newTask()
+                                                        .setAsVar("fileFix")
+                                                        .thenDo(ctx -> {
+                                                            FileFix fileFix = (FileFix) ctx.result().get(0);
+                                                            ctx.setTime(fileFix.getLastModified());
+                                                            ctx.setVariable("filename", fileFix.getFileBefore().getFilePath());
+                                                            ctx.continueTask();
+                                                        })
+                                                        .readVar("PROJECT")
+                                                        .then(getOrCreateFile("{{filename}}"))
+                                                        .thenDo(ctx -> {
+                                                            FileNode node = (FileNode) ctx.result().get(0);
+                                                            FileFix fileFix = (FileFix) ctx.variable("fileFix").get(0);
+                                                            node.setContent(fileFix.getFileBefore().getFileContent());
+                                                            long time = ctx.longVar("currentTime");
+                                                            node.travelInTime(time, modifiedNode -> {
+                                                                ((FileNode) modifiedNode).setContent(fileFix.getFileAfter().getFileContent());
+                                                                if (!fileFix.getFileAfter().getFilePath().equals(fileFix.getFileBefore().getFilePath())) {
+                                                                    String[] pathbe = fileFix.getFileBefore().getFilePath().split("/");
+                                                                    String[] pathaf = fileFix.getFileAfter().getFilePath().split("/");
+                                                                    if (!pathbe[pathbe.length - 1].equals(pathaf[pathaf.length - 1])) {
+                                                                        ((FileNode) modifiedNode).setName(pathaf[pathaf.length - 1]);
+                                                                    }
 
-                                )
-                )
+                                                                    Task traverse = newTask().readVar("PROJECT");
+                                                                    for (int i = 0; i < pathaf.length - 1; i++) {
+                                                                        traverse.then(traverseOrCreateDirectory(pathaf[i]));
+                                                                    }
 
+                                                                    traverse
+                                                                            .thenDo(ctxn -> {
+                                                                                Relation rel = modifiedNode.getRelation(ContentNode.PARENT.name);
+                                                                                long previousId = rel.get(0);
+                                                                                long newId = ctxn.resultAsNodes().get(0).id();
+                                                                                if (previousId != newId) {
+                                                                                    DirectoryNode dn = (DirectoryNode) ctxn.resultAsNodes().get(0);
+                                                                                    dn.addToContents((ContentNode) modifiedNode);
+                                                                                    rel.set(0, newId);
+                                                                                }
+                                                                                ctxn.continueTask();
+                                                                            }).clearResult()
+                                                                            .executeFrom(ctx, ctx.newResult(), SchedulerAffinity.SAME_THREAD, callback -> ctx.continueTask());
+                                                                } else {
+                                                                    ctx.continueTask();
+                                                                }
+                                                            });
+                                                        })
+
+                                        )
+                        );
     }
 }

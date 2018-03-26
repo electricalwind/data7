@@ -13,7 +13,7 @@
 
     <properties>
         <!-- replace by the desired GreyCat version -->
-        <greycat.version>10.8</greycat.version>
+        <greycat.version>11-SNAPSHOT</greycat.version>
     </properties>
 
     <artifactId>data7-greycat</artifactId>

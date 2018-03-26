@@ -18,10 +18,13 @@ public class Utils {
         switch (nodes.length) {
             case 0:
                 case0.run();
+                break;
             case 1:
                 case1.run();
+                break;
             default:
                 ctx.endTask(ctx.wrap(nodes), new IllegalStateException("More than one Node as result of Index of unique relation traversal, graph is likely corrupted"));
+                break;
         }
     }
 }

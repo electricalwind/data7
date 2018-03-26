@@ -1,23 +1,28 @@
 package data7.greycat;
 
 import data7.Importer;
-import data7.greycatmodel.*;
+import data7.greycatmodel.CWENode;
+import data7.greycatmodel.Cwes;
+import data7.greycatmodel.Data7GraphModelPlugin;
 import data7.importer.cve.DatasetUpdateListener;
 import data7.model.CWE;
 import data7.model.Data7;
 import data7.model.vulnerability.Vulnerability;
 import greycat.*;
 import greycat.rocksdb.RocksDBStorage;
+import greycat.scheduler.NoopScheduler;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import data7.greycatmodel.Projects;
 
-import static data7.greycat.Resources.PROJECT_VAR;
-import static data7.greycat.actions.Data7Actions.retrieveVulnerability;
+import static data7.greycat.Tasks.createVulnerability;
+import static data7.greycat.Utils.handleTraverseOneResult;
+import static data7.greycat.actions.Data7Actions.getOrCreateProjectNode;
+import static data7.greycat.actions.Data7Actions.getVulnerabilityNode;
 import static greycat.Constants.BEGINNING_OF_TIME;
 import static greycat.Tasks.newTask;
 
@@ -27,97 +32,145 @@ public class GraphConnector {
 
     public GraphConnector() {
 
-        GraphBuilder builder = new GraphBuilder().withPlugin(new Data7GraphModelPlugin()).withStorage(new RocksDBStorage(Resources.PATH_TO_GRAPH));
+        GraphBuilder builder = new GraphBuilder()
+                .withPlugin(new Data7GraphModelPlugin())
+                .withScheduler(new NoopScheduler())
+                .withMemorySize(1000000)
+                .withStorage(new RocksDBStorage(Resources.PATH_TO_GRAPH));
         File folder = new File(Resources.PATH_TO_GRAPH);
-        boolean importCwe = !(folder.exists() && folder.isDirectory() && folder.list().length > 0);
+        boolean importCwe = !(folder.exists() && folder.isDirectory());
         graph = builder.build();
         graph.connect(connected -> {
             if (importCwe) {
                 try {
-                    fillGraphWithCWE();
-                    graph.save(result -> System.out.println("graph is fill with cwe information and saved"));
+                    fillGraphWithCWE(result -> System.out.println("done"));
                 } catch (JAXBException | IOException | ClassNotFoundException e) {
                     System.err.println("could not fill graph with CWE");
                     e.printStackTrace();
                 }
+            } else {
+                Cwes.findAll(graph, 0, BEGINNING_OF_TIME, nodes -> {
+                    int k = 0;
+                    graph.freeNodes(nodes);
+                });
             }
         });
     }
 
-    private void fillGraphWithCWE() throws JAXBException, IOException, ClassNotFoundException {
+    private void fillGraphWithCWE(Callback<Boolean> resultOfFilling) throws JAXBException, IOException, ClassNotFoundException {
         List<CWE> cweList = Importer.getListOfCWE();
+        Task fillTask = newTask();
         for (CWE cwe : cweList) {
-            CWENode[] cweNode = new CWENode[1];
-            Cwes.find(graph, 0, BEGINNING_OF_TIME, String.valueOf(cwe.getId()), cweNodes -> {
-                if (cweNodes.length > 0) {
-                    cweNode[0] = cweNodes[0];
-                } else {
-                    cweNode[0] = CWENode.create(0, BEGINNING_OF_TIME, graph);
-                    cweNode[0].setId(cwe.getId());
-                    Cwes.update(cweNode[0], null);
-                }
-            });
-            cweNode[0].setName(cwe.getName());
-            cweNode[0].setDescription(cwe.getDescription());
-
+            fillTask = fillTask
+                    .clearResult()
+                    .thenDo(
+                            ctx -> Cwes.find(ctx.graph(), 0, BEGINNING_OF_TIME, String.valueOf(cwe.getId()), cweNodes ->
+                                    handleTraverseOneResult(ctx, cweNodes,
+                                            () -> {
+                                                CWENode node = CWENode.create(0, BEGINNING_OF_TIME, graph);
+                                                node.setIdentifier(String.valueOf(cwe.getId()));
+                                                Cwes.update(node, result -> ctx.continueWith(ctx.wrap(node)));
+                                            },
+                                            () -> ctx.continueWith(ctx.wrap(cweNodes[0]))
+                                    )
+                            )
+                    )
+                    .thenDo(ctx -> {
+                        CWENode node = (CWENode) ctx.result().get(0);
+                        node.setName(cwe.getName());
+                        node.setDescription(cwe.getDescription());
+                        ctx.continueTask();
+                    });
             for (Integer id : cwe.getChildOf()) {
-                Cwes.find(graph, 0, BEGINNING_OF_TIME, String.valueOf(id), cweNodes -> {
-                    CWENode child;
-                    if (cweNodes.length > 0) {
-                        child = cweNodes[0];
-                    } else {
-                        child = CWENode.create(0, BEGINNING_OF_TIME, graph);
-                        child.setId(cwe.getId());
-                        Cwes.update(child, null);
-                    }
-                    cweNode[0].addToChildOf(child);
-                    child.free();
-                });
+                fillTask = fillTask
+                        .thenDo(ctx -> {
+                            CWENode node = (CWENode) ctx.result().get(0);
+                            Cwes.find(graph, 0, BEGINNING_OF_TIME, String.valueOf(id), cweNodes ->
+                                    handleTraverseOneResult(ctx, cweNodes,
+                                            () -> {
+                                                CWENode child = CWENode.create(0, BEGINNING_OF_TIME, graph);
+                                                child.setIdentifier(String.valueOf(id));
+                                                node.addToChildOf(child);
+                                                Cwes.update(child, result -> {
+                                                    child.free();
+                                                    ctx.continueTask();
+                                                });
+                                            },
+                                            () -> {
+                                                node.addToChildOf(cweNodes[0]);
+                                                cweNodes[0].free();
+                                                ctx.continueTask();
+                                            })
+                            );
+                        });
             }
-            cweNode[0].free();
+            fillTask = fillTask.thenDo(ctx -> {
+                System.out.println(ctx.graph().space().available());
+                ctx.continueTask();
+            });
         }
+        TaskResult tr = fillTask.executeSync(graph);
+
+        System.out.println(graph.space().available());
+        if (tr != null) {
+            if (tr.exception() != null) {
+                tr.exception().printStackTrace();
+            } else {
+                System.out.println("CWE correctly imported in the graph");
+                tr.free();
+            }
+        }
+        graph.save(result -> {
+            System.out.println("saved");
+            resultOfFilling.on(true);
+        });
+
+
     }
+
 
     public DatasetUpdateListener getGreycatListener() {
         return new GreycatUpdateListener(graph);
     }
 
-    public void updateGraphWith(Data7 data7) {
+    public void updateGraphWith(Data7 data7, Callback<Boolean> callback) {
         Task task = newTask()
-                .readIndex(Projects.META.name, data7.getProject().getName())
-                .ifThen(ctx -> ctx.result().size() == 0,
-                        newTask().thenDo(new ActionFunction() {
-                            @Override
-                            public void eval(TaskContext ctx) {
-                                ProjectNode project = ProjectNode.create(0, BEGINNING_OF_TIME, graph);
-                                project.setName(data7.getProject().getName());
-                                Projects.update(project, new Callback<Boolean>() {
-                                    @Override
-                                    public void on(Boolean result) {
-                                        ctx.continueWith(ctx.wrap(project));
-                                    }
-                                });
-                            }
-                        }))
-                .defineAsGlobalVar(PROJECT_VAR);
+                .then(getOrCreateProjectNode(data7.getProject().getName()));
         for (Map.Entry<String, Vulnerability> vulnerabilityEntry : data7.getVulnerabilitySet().getVulnerabilityDataset().entrySet()) {
             task = task
-                    .then(retrieveVulnerability(vulnerabilityEntry.getKey()))
+                    .then(getVulnerabilityNode(vulnerabilityEntry.getKey()))
                     .ifThenElse(ctx -> ctx.result().size() > 0,
                             updateVulnerability(vulnerabilityEntry.getValue()),
-                            createVulnerability(vulnerabilityEntry.getValue())
+                            createVulnerability(vulnerabilityEntry.getValue(), data7.getProject().getName())
                     );
 
         }
 
-        task.execute(graph, new Callback<TaskResult>() {
-            @Override
-            public void on(TaskResult result) {
-
-            }
-        });
+        task.save()
+                .execute(graph, new Callback<TaskResult>() {
+                    @Override
+                    public void on(TaskResult result) {
+                        int k = 0;
+                        result.clear();
+                        callback.on(true);
+                    }
+                });
 
     }
 
+    private Task updateVulnerability(Vulnerability value) {
+        return newTask().thenDo(ctx ->
+        {
+            ctx.continueTask();
+        });
+    }
 
+    public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException {
+        new GraphConnector();
+        /**.updateGraphWith(updateOrCreateDatasetFor(CProjects.SYSTEMD), new Callback<Boolean>() {
+        @Override public void on(Boolean result) {
+        System.out.println("done");
+        }
+        });*/
+    }
 }

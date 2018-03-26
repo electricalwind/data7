@@ -56,7 +56,7 @@ public class ActionTraverseDirectory implements Action {
                                 content.free();
                             }
                         }
-                        if (goodOne == null) {
+                        if (goodOne != null) {
                             ctx.continueWith(ctx.wrap(goodOne));
                         } else {
                             ContentNode node = null;

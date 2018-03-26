@@ -21,8 +21,8 @@ public class GreycatUpdateListener implements DatasetUpdateListener{
 
     @Override
     public void bugAddedTo(Vulnerability vulnerability,String bugId) {
-        task = task.then(retrieveVulnerability(vulnerability.getCve()))
-                .then(addBugToVulnerability(bugId));
+        //task = task.then(retrieveVulnerability(vulnerability.getCve()))
+          //      .then(addBugToVulnerability(bugId));
     }
 
     @Override
@@ -32,20 +32,20 @@ public class GreycatUpdateListener implements DatasetUpdateListener{
 
     @Override
     public void scoreUpdatedFor(Vulnerability vulnerability) {
-        task = task.then(retrieveVulnerability(vulnerability.getCve()))
-                .then(updateScoreVulnerability(vulnerability.getScore()));
+       // task = task.then(retrieveVulnerability(vulnerability.getCve()))
+         //       .then(updateScoreVulnerability(vulnerability.getScore()));
     }
 
     @Override
     public void cweUpdatedFor(Vulnerability vulnerability) {
-        task = task.then(retrieveVulnerability(vulnerability.getCve()))
-                .then(updateCWEVulnerability(vulnerability.getCwe()));
+       // task = task.then(retrieveVulnerability(vulnerability.getCve()))
+        //        .then(updateCWEVulnerability(vulnerability.getCwe()));
     }
 
     @Override
     public void addVulnerability(Vulnerability vulnerability) {
-        task = task
-                .then(createVulnerability(vulnerability));
+        //task = task
+         //       .then(createVulnerability(vulnerability));
     }
 
     @Override

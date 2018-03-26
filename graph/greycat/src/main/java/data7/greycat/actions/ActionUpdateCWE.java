@@ -10,11 +10,11 @@ import greycat.struct.Buffer;
 
 import static data7.greycat.Utils.handleTraverseOneResult;
 
-public class ActionSetCWE implements Action {
-    public static final String NAME = "setCWE";
+public class ActionUpdateCWE implements Action {
+    public static final String NAME = "updateCWE";
     private final String _cwe;
 
-    public ActionSetCWE(String p_cwe) {
+    public ActionUpdateCWE(String p_cwe) {
         this._cwe = p_cwe;
     }
 

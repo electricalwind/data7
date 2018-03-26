@@ -53,6 +53,7 @@ object StringAnalysis {
      *
      * @return map of words and their frequency
      */
+    @JvmStatic
     fun slicingWord(file: String): Map<String, Int> {
         val listWord = file.split(Regex("\\W+"))
         return mapOfFrequency(listWord

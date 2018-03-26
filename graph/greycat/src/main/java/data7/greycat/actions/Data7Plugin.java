@@ -23,15 +23,9 @@ public class Data7Plugin implements Plugin {
                 .setFactory(params -> getProjectNode((String) params[0]));
 
         graph.actionRegistry()
-                .getOrCreateDeclaration(ActionTraverseDirectory.NAME)
-                .setParams(Type.STRING)
-                .setDescription("Traverse a directory to the next indicated one")
-                .setFactory(params -> traverseDirectoryNode((String) params[0]));
-
-        graph.actionRegistry()
                 .getOrCreateDeclaration(ActionGetOrCreateFile.NAME)
                 .setParams(Type.STRING)
-                .setDescription("")
+                .setDescription("Get a file Node from a project in the result")
                 .setFactory(params -> getFileNode((String) params[0]));
     }
 
