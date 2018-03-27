@@ -69,6 +69,7 @@ object StringAnalysis {
      *
      * @return map of words and their frequency
      */
+    @JvmStatic
     fun slicingWordWithoutFilter(file: String): Map<String, Int> {
         val listWord = file.split(Regex("\\W+"))
         return mapOfFrequency(listWord
@@ -82,6 +83,7 @@ object StringAnalysis {
      *
      * @return String without the comment
      */
+    @JvmStatic
     fun contentWithoutComment(content: String): String {
         val fc = content.split("\n") as MutableList
         val lines = fc.size

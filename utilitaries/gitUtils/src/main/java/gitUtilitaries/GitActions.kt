@@ -99,6 +99,7 @@ class GitActions {
             var head: ObjectId? = repo.resolve(beforeThisCommit)
             var path: String? = filePath
             var start = RevWalk(repo).parseCommit(head)
+            head = start
             do {
                 val log = git.log()?.add(head)?.addPath(path)?.call() ?: return listOfCommits
                 for (revcom in log) {
@@ -141,7 +142,7 @@ class GitActions {
             renameDetector.addAll(DiffEntry.scan(tw));
             val files = renameDetector.compute()
             for (diffEntry in files) {
-                if ((diffEntry.changeType == DiffEntry.ChangeType.RENAME || diffEntry.changeType == DiffEntry.ChangeType.COPY) && diffEntry.newPath.contains(path!!)) {
+                if ((diffEntry.changeType == DiffEntry.ChangeType.RENAME || diffEntry.changeType == DiffEntry.ChangeType.COPY) && diffEntry.newPath.contains(path!!)  && !diffEntry.oldPath.equals(path)) {
                     System.out.println("Found: " + diffEntry.toString() + " return " + diffEntry.oldPath);
                     return diffEntry.oldPath;
                 }
@@ -169,6 +170,7 @@ class GitActions {
             var head: ObjectId = commitId!!
             var path: String? = filePath
             var start = RevWalk(repo).parseCommit(head)
+            head = start
             listOfCommits.add(NamedCommit(filePath, commit))
             do {
                 val log = git.log()?.add(head)?.addPath(path)?.call() ?: return null

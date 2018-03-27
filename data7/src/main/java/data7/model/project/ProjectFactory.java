@@ -14,7 +14,7 @@ public class ProjectFactory {
                 return OPEN_SSL;
             case "wireshark":
                 return WIRESHARK;
-            case "Systemd":
+            case "systemd":
                 return SYSTEMD;
             default:
                 return null;
@@ -30,7 +30,7 @@ public class ProjectFactory {
                 return OPENSSL_VERSION();
             case "wireshark":
                 return WIRESHARK_VERSION();
-            case "Systemd":
+            case "systemd":
                 return SYSTEMD_VERSION();
             default:
                 return null;
