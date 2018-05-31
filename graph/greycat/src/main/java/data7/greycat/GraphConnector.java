@@ -37,6 +37,8 @@ public class GraphConnector {
                 .withScheduler(new NoopScheduler())
                 .withMemorySize(1000000)
                 .withStorage(new RocksDBStorage(Resources.PATH_TO_GRAPH));
+
+
         File folder = new File(Resources.PATH_TO_GRAPH);
         boolean importCwe = !(folder.exists() && folder.isDirectory());
         graph = builder.build();

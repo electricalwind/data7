@@ -1,6 +1,6 @@
 package data7.model;
 
-import data7.model.project.Project;
+import data7.project.Project;
 import data7.model.vulnerability.VulnerabilitySet;
 
 import java.io.Serializable;

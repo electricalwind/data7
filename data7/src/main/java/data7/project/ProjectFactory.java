@@ -1,10 +1,12 @@
-package data7.model.project;
+package data7.project;
 
 import java.util.TreeMap;
 
-import static data7.model.project.CProjects.*;
+import static data7.project.CProjects.*;
 
 public class ProjectFactory {
+
+
 
     public static Project retrieveProjectInfo(String name) {
         switch (name) {

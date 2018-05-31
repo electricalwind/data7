@@ -22,6 +22,7 @@ class YearNode {
 class CVENode {
     att identifier : String
     rel category : CWENode oppositeOf cves
+    att versions : StringArray
     att description : String
     att score : String
     att bugIds : StringArray

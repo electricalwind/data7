@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public class FileInterest implements Serializable {
 
+    private static final long serialVersionUID = 20180531L;
+
     //file content
     private final String fileContent;
     //file path
@@ -15,6 +17,7 @@ public class FileInterest implements Serializable {
 
     /**
      * Constructor
+     *
      * @param fileContent
      * @param filePath
      */

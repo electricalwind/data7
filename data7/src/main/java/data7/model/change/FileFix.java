@@ -8,6 +8,9 @@ import java.io.Serializable;
  * it contains the information on the file before and after the commit as well as the commit corresponding to the last modification of the file
  */
 public class FileFix implements Serializable {
+
+    private static final long serialVersionUID = 20180531L;
+
     //File in its previous state
     private final FileInterest fileBefore;
     //File in its new state

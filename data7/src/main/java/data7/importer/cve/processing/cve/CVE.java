@@ -1,6 +1,7 @@
 package data7.importer.cve.processing.cve;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -24,12 +25,24 @@ public class CVE {
 
     private final long creationTime;
 
+    private final Set<String> versions;
 
-    CVE(String cve, String score, String description, long lastModified, long creationTime) {
+
+    /**
+     *
+     * @param cve
+     * @param score
+     * @param description
+     * @param lastModified
+     * @param creationTime
+     * @param versions
+     */
+    CVE(String cve, String score, String description, long lastModified, long creationTime, Set<String> versions) {
         CVE = cve;
         this.score = score;
         this.description = description;
         this.lastModified = lastModified;
+        this.versions = versions;
         this.patchingCommits = null;
         this.bugsId = null;
         this.CWE = "";
@@ -78,5 +91,9 @@ public class CVE {
 
     public long getCreationTime() {
         return creationTime;
+    }
+
+    public Set<String> getImpactedVersions() {
+        return versions;
     }
 }

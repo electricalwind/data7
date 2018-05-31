@@ -4,20 +4,16 @@ package data7.importer.cve.processing.cve;
 import data7.importer.cve.DatasetUpdateListener;
 import data7.model.Data7;
 import data7.model.change.Commit;
-import data7.model.change.FileFix;
-import data7.model.change.FileInterest;
-import data7.model.project.Project;
+import data7.project.Project;
 import data7.model.vulnerability.Vulnerability;
 import gitUtilitaries.GitActions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static data7.Resources.FILE_EXTENSION;
 import static data7.Utils.generateCommitOfInterest;
 
 

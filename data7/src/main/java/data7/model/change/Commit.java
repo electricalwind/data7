@@ -7,6 +7,8 @@ import java.util.List;
  * Data class representing a commit
  */
 public class Commit implements Serializable {
+    private static final long serialVersionUID = 20180531L;
+
     //commit full message
     private final String message;
     //commit timestamp

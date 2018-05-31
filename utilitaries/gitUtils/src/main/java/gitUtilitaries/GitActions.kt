@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.util.*
 
 /**
  * Git Utilitary class
@@ -67,7 +68,8 @@ class GitActions {
      */
     @Throws(IOException::class)
     fun retrievingFileFromSpecificCommit(commit: String, path: String): String? {
-        val treeId = repo.resolve("$commit^{tree}") ?: throw NoSuchElementException("the hash commit can not be resolved")
+        val treeId = repo.resolve("$commit^{tree}")
+                ?: throw NoSuchElementException("the hash commit can not be resolved")
 
         val treeWalk = TreeWalk(repo)
         treeWalk.addTree(treeId)
@@ -126,10 +128,10 @@ class GitActions {
 
     /**
      * Function to retrieve the rename of file in previous commit
-     * This function has a timeout of 10s to avoid blocking for too long in large git repository
+     * This function has a timeout of 1s to avoid blocking for too long in large git repository
      */
     fun getRenamedPath(start: RevCommit, path: String?): String? {
-        val endTimeMillis = System.currentTimeMillis() + 10000;
+        val endTimeMillis = System.currentTimeMillis() + 1000
         git.log()?.add(start)?.call()?.forEach { commit ->
             if (System.currentTimeMillis() > endTimeMillis) {
                 return null;
@@ -142,7 +144,7 @@ class GitActions {
             renameDetector.addAll(DiffEntry.scan(tw));
             val files = renameDetector.compute()
             for (diffEntry in files) {
-                if ((diffEntry.changeType == DiffEntry.ChangeType.RENAME || diffEntry.changeType == DiffEntry.ChangeType.COPY) && diffEntry.newPath.contains(path!!)  && !diffEntry.oldPath.equals(path)) {
+                if ((diffEntry.changeType == DiffEntry.ChangeType.RENAME || diffEntry.changeType == DiffEntry.ChangeType.COPY) && diffEntry.newPath.contains(path!!) && !diffEntry.oldPath.equals(path)) {
                     System.out.println("Found: " + diffEntry.toString() + " return " + diffEntry.oldPath);
                     return diffEntry.oldPath;
                 }
@@ -290,9 +292,11 @@ class GitActions {
         var sumDeltaFile: DeltaHistory = DeltaHistory()
         try {
             if (listofCommit.size > 1) {
-                var newFile = retrievingFileFromSpecificCommit(listofCommit[0].revCommit.id.name, listofCommit[0].filePath)?.split("\n") ?: listOf()
+                var newFile = retrievingFileFromSpecificCommit(listofCommit[0].revCommit.id.name, listofCommit[0].filePath)?.split("\n")
+                        ?: listOf()
                 for (i in 1..(listofCommit.size - 1)) {
-                    val oldFile = retrievingFileFromSpecificCommit(listofCommit[i].revCommit.id.name, listofCommit[i].filePath)?.split("\n") ?: listOf()
+                    val oldFile = retrievingFileFromSpecificCommit(listofCommit[i].revCommit.id.name, listofCommit[i].filePath)?.split("\n")
+                            ?: listOf()
                     if (oldFile.size != 0) {
                         sumDeltaFile.sum(DiffComputing.computeDelta(oldFile, newFile))
                         newFile = oldFile;
@@ -351,7 +355,7 @@ class GitActions {
      * Method to retireve the message of a given commit
      */
     @Throws(IOException::class)
-    fun getCommitMessage(hash: String): String{
+    fun getCommitMessage(hash: String): String {
         val revWalk = RevWalk(repo)
         val commitId = repo.resolve(hash)
         val commit = revWalk.parseCommit(commitId)

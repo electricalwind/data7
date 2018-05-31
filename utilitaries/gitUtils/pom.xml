@@ -15,14 +15,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.2.20</kotlin.version>
+        <kotlin.version>1.2.30</kotlin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.8.0.201706111038-r</version>
+            <version>4.11.0.201803080745-r</version>
             <exclusions>
                 <exclusion>
                     <groupId>junit</groupId>
@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>

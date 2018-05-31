@@ -2,7 +2,7 @@ package data7.importer.cve.processing.cve;
 
 
 import data7.Utils;
-import data7.model.project.Project;
+import data7.project.Project;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -15,7 +15,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +51,7 @@ public class CVEParser implements Callable<List<CVE>> {
         String cve = "";
         String cwe = "";
         String summary = "";
+        Set<String> versions = new HashSet<>();
         boolean softstudy = false;
         String score = "";
         List<String> bugId = new ArrayList<>();
@@ -64,7 +67,7 @@ public class CVEParser implements Callable<List<CVE>> {
                 switch (startElement.getName().getLocalPart()) {
                     case "entry":
                         if (softstudy) {
-                            currentCVE = new CVE(cve, score, summary, lastModified, creationTime);
+                            currentCVE = new CVE(cve, score, summary, lastModified, creationTime, versions);
                             if (cwe.length() > 0) currentCVE.setCWE(cwe);
                             currentCVE.setBugsId(bugId);
                             currentCVE.setPatchingCommits(commit);
@@ -75,6 +78,7 @@ public class CVEParser implements Callable<List<CVE>> {
                         cwe = "";
                         summary = "";
                         score = "";
+                        versions= new HashSet<>();
                         lastModified = 0;
                         bugId = new ArrayList<>();
                         commit = new ArrayList<>();
@@ -82,11 +86,11 @@ public class CVEParser implements Callable<List<CVE>> {
                         break;
                     case "last-modified-datetime":
                         xmlEvent = eventReader.nextEvent();
-                        lastModified = Utils.dateToLong(xmlEvent.asCharacters().getData())/1000;
+                        lastModified = Utils.dateToLong(xmlEvent.asCharacters().getData()) / 1000;
                         break;
                     case "published-datetime":
                         xmlEvent = eventReader.nextEvent();
-                        creationTime = Utils.dateToLong(xmlEvent.asCharacters().getData())/1000;
+                        creationTime = Utils.dateToLong(xmlEvent.asCharacters().getData()) / 1000;
                         break;
                     case "summary":
                         xmlEvent = eventReader.nextEvent();
@@ -102,8 +106,10 @@ public class CVEParser implements Callable<List<CVE>> {
                                     Matcher m = softwareMatch(soft);
                                     if (m.find()) {
                                         soft = m.group(1);
-                                        if (soft.compareTo(project.getName()) == 0)
+                                        if (soft.compareTo(project.getName()) == 0){
+                                            versions.add(m.group(2));
                                             softstudy = true;
+                                        }
                                     }
                                 }
                             }
@@ -117,8 +123,10 @@ public class CVEParser implements Callable<List<CVE>> {
                                 Matcher m = softwareMatch(xmlEvent.asCharacters().getData());
                                 if (m.find()) {
                                     String soft = m.group(1);
-                                    if (soft.compareTo(project.getName()) == 0)
+                                    if (soft.compareTo(project.getName()) == 0){
+                                        versions.add(m.group(2));
                                         softstudy = true;
+                                    }
                                 }
                             }
                             xmlEvent = eventReader.nextEvent();
@@ -181,9 +189,9 @@ public class CVEParser implements Callable<List<CVE>> {
         String re3 = ".*?";    // Non-greedy match on filler
         String re4 = "(?:[a-z][a-z]+)";   // Uninteresting: word
         String re5 = ".*?";   // Non-greedy match on filler
-        String re6 = "((?:[a-z][a-z0-9_]+))";    // Word 1
+        String re6 = "((?:[a-z][a-z0-9_]+))";    // soft
         String re7 = ".+?";  // Non-greedy match on filler
-        String re8 = "(.+)";    // Integer Number 1
+        String re8 = "((?:[a-z0-9_.]+))";    // version
         Pattern p = Pattern.compile(re1 + re2 + re3 + re4 + re5 + re6 + re7 + re8, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         return p.matcher(soft);
     }

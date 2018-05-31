@@ -15,9 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +25,49 @@ import java.util.TimeZone;
 import static data7.Resources.*;
 
 public class Exporter {
+
+
+    /**
+     * Method to save the current data7 in an object file that will appear in the selected folder
+     *
+     * @param data7 to save as binary
+     * @throws IOException
+     */
+    public static void saveDataset(Data7 data7) throws IOException {
+        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj", false);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(data7);
+        oos.close();
+        fos.close();
+    }
+
+    /**
+     * Method to load the data7 of a given project that have been save in its binary form
+     *
+     * @return Data7
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static Data7 loadDataset(String project) throws IOException, ClassNotFoundException {
+        File file = new File(PATH_TO_BINARY + project + "-data7.obj");
+        if (file.exists()) {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream read = new ObjectInputStream(fileIn);
+            Data7 data = (Data7) read.readObject();
+            read.close();
+            fileIn.close();
+            return data;
+        } else {
+            return null;
+        }
+    }
+
+
     /**
      * Function to export the vulnerability dataset in a xml file.
      * Note : Only vulnerability with patches will be exported
      *
-     * @param data7
+     * @param data7 to export to xml
      */
     public static void exportDatasetToXML(Data7 data7) {
         VulnerabilitySet dataset = data7.getVulnerabilitySet();
@@ -76,6 +112,14 @@ public class Exporter {
                     Element description = doc.createElement("description");
                     description.appendChild(doc.createTextNode(vuln.getValue().getDescription()));
                     cve.appendChild(description);
+
+                    Element versions = doc.createElement("affectedVersions");
+                    for (String version : vuln.getValue().getVersions()) {
+                        Element v = doc.createElement("version");
+                        v.appendChild(doc.createTextNode(version));
+                        versions.appendChild(v);
+                    }
+                    cve.appendChild(versions);
 
                     Element bugsId = doc.createElement("bugs");
                     for (String id : vuln.getValue().getBugIds()) {
@@ -138,28 +182,20 @@ public class Exporter {
 
             System.out.println("File saved!");
 
-        } catch (ParserConfigurationException | TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
+        } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
     }
 
+
     /**
-     * Method to save the current data7 in an object file that will appear in the selected folder
+     * Method to save the cwe list in an object file that will appear in the selected folder
      *
+     * @param cweList
      * @throws IOException
      */
-    public static void saveDataset(Data7 data7) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj",false);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(data7);
-        oos.close();
-        fos.close();
-    }
-
     public static void saveCWEList(List<CWE> cweList) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + CWE_OBJ,false);
+        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + CWE_OBJ, false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(cweList);
         oos.close();

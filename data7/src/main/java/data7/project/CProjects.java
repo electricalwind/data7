@@ -1,8 +1,5 @@
-package data7.model.project;
+package data7.project;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class CProjects {

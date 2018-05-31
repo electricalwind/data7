@@ -1,7 +1,7 @@
 package data7.importer.cve.processing.git;
 
 
-import data7.model.project.Project;
+import data7.project.Project;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.concurrent.Callable;

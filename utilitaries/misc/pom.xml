@@ -14,7 +14,7 @@
     <artifactId>data7-miscUtils</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <kotlin.version>1.2.20</kotlin.version>
+        <kotlin.version>1.2.30</kotlin.version>
     </properties>
 
     <dependencies>

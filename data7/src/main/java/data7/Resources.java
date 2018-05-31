@@ -1,6 +1,8 @@
 package data7;
 
 public class Resources {
+
+
     public static final String FILE_START = "nvdcve-2.0-";
     public static final String CVE_URL = "https://static.nvd.nist.gov/feeds/xml/cve/2.0/" + FILE_START;
     public static final String META = ".meta";

@@ -16,8 +16,15 @@ import java.util.List;
 
 import static data7.Resources.FILE_EXTENSION;
 
+@SuppressWarnings("Duplicates")
 public class Utils {
 
+    /**
+     * Function to get the epoc time from a date encoded under the format yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+     * @param str date
+     * @return long epoc time
+     * @throws ParseException
+     */
     public static long dateToLong(String str) throws ParseException {
         DateFormat formatter;
         Date date;
@@ -26,6 +33,23 @@ public class Utils {
         return date.getTime();
     }
 
+
+    public static long dateToLongWoM(String str) throws ParseException {
+        DateFormat formatter;
+        Date date;
+        formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        date = (Date) formatter.parse(str);
+        return date.getTime();
+    }
+
+    /**
+     * Function to generate a commit Object from a hash
+     * @param git git repository
+     * @param hash to generate the commit object from
+     * @param filter whether of not files should be filtered
+     * @return a commit object
+     * @see Commit
+     */
     public static Commit generateCommitOfInterest(GitActions git, String hash, boolean filter) {
         try {
             String commitMessage = git.getCommitMessage(hash);
@@ -53,6 +77,14 @@ public class Utils {
         }
     }
 
+    /**
+     * Function to generate a commit Object from a revcommit object
+     * @param git git repository
+     * @param commit to generate the commit object from
+     * @param filter whether of not files should be filtered
+     * @return a commit object
+     * @see Commit
+     */
     public static Commit generateCommitOfInterest(GitActions git, RevCommit commit,boolean filter) {
         try {
             String hash = commit.getName();
