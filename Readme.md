@@ -45,8 +45,23 @@ For a given project P
 
 
 * Updating a dataset
+    1. Data7 first check when was the latest update, if less than 7 days passed since the last update, only the modified and recent xml feed are downloaded, otherwise all xml feeds from years that have been modified since the last update are downloaded
+    2. Data7 will then parse the XML and retrieve all vulnerabilities reported for P and create a new entry if there is a new vulnerability or update it if necessary
+    3. For each updated or created vulnerability entry, look for new link of commit fix and/or bug id.
+    4. The git repository is pulled
+    5. For all new/updated entry  that have a new link, retrieve the commit information
+    6. For all entry that have a new bug id, check whether this bug id was already found in the commit history (from a previous crawl)
+    7. For all latest commit (since latest update), analyze the message and look for a bug id that was present in the report or for a CVE Identifier and if a matche is made then the commit information is added to the vulnerability information. 
 
 
+## Dataset Structure
+
+### API (binary form)
+
+![schema](doc/model.png)
+
+
+### XML exporter
 
 
 

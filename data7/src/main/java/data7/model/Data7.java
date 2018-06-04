@@ -10,6 +10,7 @@ import java.util.*;
  * The Data7 (pronounce dataset) class
  */
 public class Data7 implements Serializable {
+    private static final long serialVersionUID = 20180531L;
 
     //Built Vulnerability dataSet
     private final VulnerabilitySet vulnerabilitySet;
