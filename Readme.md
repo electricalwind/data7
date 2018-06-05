@@ -12,7 +12,7 @@ Data7 is a tool that put together vulnerability report and vulnerability patches
 * time of creation 
 * time of last modification
 * CVSS severity score
-* bugs ids (if existing)   
+* bug ids (if existing)   
 * list of impacted versions
 * list of commits that fixed the vulnerability which contains:
 	- hash
@@ -123,7 +123,7 @@ The schema of the xml is the following:
 
 ### Extending to other tools/database
 
-As analyst might want to import the dataset to their own tool or favorite database, a last option is possible that allow the user to import the data at the same time the dataset is being built/update through an Observer. Indeed, when asking to update/create a dataset the user can pass as an argument a listener that implements the DatasetUpdateListener interface that will notify of the latest update in live.
+As analysts might want to import the dataset to their own tool or favourite database, a last option is possible that allow the user to import the data at the same time the dataset is being built/update through an Observer. Indeed, when asking to update/create a dataset the user can pass as an argument a listener that implements the DatasetUpdateListener interface that will notify of the latest update in live.
 
 The interface offer 6 notifications:
 
@@ -134,7 +134,7 @@ The interface offer 6 notifications:
 * when a new vulnerability is added
 * when the update is finished
 
-and is presented as follow:
+and is presented as follows:
 
 ```java
 package data7.importer.cve;
@@ -159,7 +159,7 @@ public interface DatasetUpdateListener extends EventListener {
 }
 ``` 
 
-This interface allows to develop more functionality for the dataset such as the one currently in development in the graph section, which use a temporal graph database to store the dataset. Note that it might be better to first do a batch import and then use the interface when update are being done.
+This interface allows to develop more functionality for the dataset such as the one currently in development in the graph section, which uses a temporal graph database to store the dataset. Note that it might be better to first do a batch import and then use the interface when update is being done.
 
 ## Supported projects
 
@@ -201,11 +201,11 @@ Importer.updateOrCreateDatasetFor(aProject);
 //like CProjects.LINUX_KERNEL
 ``` 
     
-Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of linux, don't forget to rename linux into linux_kernel)
+Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux_kernel)
 
 ## Statistics
 
-| Projects | Time to create | Number of Vulnerabilities | NoV with Fixes | average CVSS | avg CVSS with fixe | Number of Fix | Number of FileFix
+| Projects | Time to create | Number of vulnerabilities | NoV with Fixes | average CVSS | avg CVSS with fixes | Number of Fix | Number of FileFix
 |----------|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
 |Linux Kernel|115 mn|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
 |Wireshark|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
@@ -261,11 +261,11 @@ Note that on creation of the dataset it might be better for the largest project 
 
 ## Additional Libraries Included
 
-In this tool, two custom made library are included:
+In this tool, three custom-made libraries are included:
 
 ### Git Utils
 
-This library provide some useful function when trying to mine a git repository.
+This library coded in Kotlin provide some useful function when trying to mine a git repository.
 The following methods are available
 
 * retrievingFileFromSpecificCommit
@@ -290,15 +290,19 @@ this library work on local repository but also offer the possibility to clone a 
 
 ### Misc
 
-This library contains additional useful function such as downlading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+This library coded as well in Kotlin contains additional useful function such as downloading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
 
 ### CWE Importer
 
-For those whishing to analyze cwe as well 
+For those wishing to analyse cwe as well a last library is made available. The library can simply be called using:
+```java
+Importer.getListOfCWE();
+```
+This call will download on the nvd website the xml with all the description of CWE and parse it before serializing for good. This is especially useful for studies that focus on CWE when using the data7. In addition a fiel childOf is present for each CWE which allows to rebuild the hierarchy of CWE type.
 
 ## About Me
 
-This tool was developped during my thesis and is made available to everyone :)
+This tool was developed during my thesis and is made available to everyone. :)
 
 
 

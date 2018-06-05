@@ -28,7 +28,7 @@ Data7 is a tool that put together vulnerability report and vulnerability patches
 \item time of creation 
 \item time of last modification
 \item CVSS severity score
-\item bugs ids (if existing)  \\
+\item bug ids (if existing)  \\
 \item list of impacted versions
 \item list of commits that fixed the vulnerability which contains:
 
@@ -149,7 +149,7 @@ $<$?xml version="1.0" encoding="UTF-8" standalone="no"?$>$
 
 \subsection*{Extending to other tools/database}
 
-As analyst might want to import the dataset to their own tool or favorite database, a last option is possible that allow the user to import the data at the same time the dataset is being built/update through an Observer. Indeed, when asking to update/create a dataset the user can pass as an argument a listener that implements the DatasetUpdateListener interface that will notify of the latest update in live.
+As analysts might want to import the dataset to their own tool or favourite database, a last option is possible that allow the user to import the data at the same time the dataset is being built/update through an Observer. Indeed, when asking to update/create a dataset the user can pass as an argument a listener that implements the DatasetUpdateListener interface that will notify of the latest update in live.
 
 The interface offer 6 notifications:
 
@@ -162,7 +162,7 @@ The interface offer 6 notifications:
 \item when the update is finished
 \end{itemize}
 
-and is presented as follow:
+and is presented as follows:
 
 ```java
 package data7.importer.cve;
@@ -190,7 +190,7 @@ void updatefinished();
 \}
 ``` 
 
-This interface allows to develop more functionality for the dataset such as the one currently in development in the graph section, which use a temporal graph database to store the dataset. Note that it might be better to first do a batch import and then use the interface when update are being done.
+This interface allows to develop more functionality for the dataset such as the one currently in development in the graph section, which uses a temporal graph database to store the dataset. Note that it might be better to first do a batch import and then use the interface when update is being done.
 
 \section*{Supported projects}
 
@@ -243,11 +243,11 @@ Importer.updateOrCreateDatasetFor(aProject);
 //like CProjects.LINUX\_KERNEL
 ``` 
 
-Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of linux, don't forget to rename linux into linux\_kernel)
+Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux\_kernel)
 
 \section*{Statistics}
 
-$\vert$ Projects $\vert$ Time to create $\vert$ Number of Vulnerabilities $\vert$ NoV with Fixes $\vert$ average CVSS $\vert$ avg CVSS with fixe $\vert$ Number of Fix $\vert$ Number of FileFix
+$\vert$ Projects $\vert$ Time to create $\vert$ Number of vulnerabilities $\vert$ NoV with Fixes $\vert$ average CVSS $\vert$ avg CVSS with fixes $\vert$ Number of Fix $\vert$ Number of FileFix
 $\vert$----------$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
 $\vert$Linux Kernel$\vert$115 mn$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
 $\vert$Wireshark$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
@@ -301,11 +301,11 @@ $\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
 
 \section*{Additional Libraries Included}
 
-In this tool, two custom made library are included:
+In this tool, three custom-made libraries are included:
 
 \subsection*{Git Utils}
 
-This library provide some useful function when trying to mine a git repository.
+This library coded in Kotlin provide some useful function when trying to mine a git repository.
 The following methods are available
 
 \begin{itemize}
@@ -332,10 +332,18 @@ this library work on local repository but also offer the possibility to clone a 
 
 \subsection*{Misc}
 
-This library contains additional useful function such as downlading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+This library coded as well in Kotlin contains additional useful function such as downloading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+
+\subsection*{CWE Importer}
+
+For those wishing to analyse cwe as well a last library is made available. The library can simply be called using:
+\texttt{java
+Importer.getListOfCWE();
+}
+This call will download on the nvd website the xml with all the description of CWE and parse it before serializing for good. This is especially useful for studies that focus on CWE when using the data7. In addition a fiel childOf is present for each CWE which allows to rebuild the hierarchy of CWE type.
 
 \section*{About Me}
 
-This tool was developped during my thesis and is made available to everyone :)
+This tool was developed during my thesis and is made available to everyone. :)
 
 \end{document}
