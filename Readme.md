@@ -14,14 +14,12 @@ Data7 is a tool that put together vulnerability report and vulnerability patches
 * CVSS severity score
 * bugs ids (if existing)   
 * list of impacted versions
-* list of commits that fixed the vulnerability
-    * commits contains:
-        * hash
-        * timestamp
-        * message
-        * fixes (files in their states before and after fix)
-
-
+* list of commits that fixed the vulnerability which contains:
+	- hash
+	- timestamp
+	- message
+	- fixes (files in their states before and after fix)
+    
 ## Why? 
 
 When investigating a vulnerability, a security analyst need as much information as possible on it and usually reports are a good starting point. However, the most insightful piece of information on the vulnerability is usually the fix that was created to solve it. From the fix, the origin of the vulnerability and its type can be determined. Fixes when available can be found as separated links in the reports but it is far from being always the case. 
@@ -293,6 +291,10 @@ this library work on local repository but also offer the possibility to clone a 
 ### Misc
 
 This library contains additional useful function such as downlading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+
+### CWE Importer
+
+For those whishing to analyze cwe as well 
 
 ## About Me
 

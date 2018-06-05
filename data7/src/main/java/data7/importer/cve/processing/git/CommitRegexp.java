@@ -4,7 +4,7 @@ package data7.importer.cve.processing.git;
  * #%L
  * Data7
  * %%
- * Copyright (C) 2018 Matthieu Jimenez
+ * Copyright (C) 2018 University of Luxembourg, Matthieu Jimenez
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package data7.importer.cve.processing.git;
  * limitations under the License.
  * #L%
  */
+
+
 
 
 import data7.project.Project;

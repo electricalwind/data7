@@ -15,6 +15,8 @@
 
 \chapter*{Data7 Project: An automatically generated Vulnerability dataset}
 
+\href{https://opensource.org/licenses/Apache-2.0}{\includegraphics{https://img.shields.io/badge/License-Apache%202.0-blue.svg}}
+
 \section*{What is it?}
 
 Data7 is a tool that put together vulnerability report and vulnerability patches  of a given software project in an automated way under the form of a dataset. Once created the dataset can then easily be updated with the latest information available. The information that can be found in the dataset is the following:
@@ -28,17 +30,13 @@ Data7 is a tool that put together vulnerability report and vulnerability patches
 \item CVSS severity score
 \item bugs ids (if existing)  \\
 \item list of impacted versions
-\item list of commits that fixed the vulnerability
-
-\begin{itemize}
-\item commits contains:
+\item list of commits that fixed the vulnerability which contains:
 
 \begin{itemize}
 \item hash
 \item timestamp
 \item message
 \item fixes (files in their states before and after fix)
-\end{itemize}
 \end{itemize}
 \end{itemize}
 
@@ -218,9 +216,126 @@ but it can easily be extended to any other project where it is possible to find 
 
 \section*{How to use the tools}
 
-The tools is easy to use as everything is part of a maven project, 
-first head to 
+\begin{enumerate}
+\item To use the tool, the first step is to create a folder in your local storage that will gather all data.
+The structure once run the tool should look like this
+
+\begin{itemize}
+\item myfolder
+
+\begin{itemize}
+\item git
+\item cve
+\item xml
+\item binary
+\end{itemize}
+\end{itemize}
+\item Then head to data7/src/main/java/data7/Ressources.java and change the PATH\emph{TO}SAVE value by your folder path.
+\item Once done, you can run mvn install and the tool is installed
+\item To call it from your code, just call 
+```java
+import data7.project.CProjects;
+import data7.project.Project;   
+\end{enumerate}
+
+Importer.updateOrCreateDatasetFor(aProject);
+// Projects are available in projects module
+//like CProjects.LINUX\_KERNEL
+``` 
+
+Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of linux, don't forget to rename linux into linux\_kernel)
 
 \section*{Statistics}
+
+$\vert$ Projects $\vert$ Time to create $\vert$ Number of Vulnerabilities $\vert$ NoV with Fixes $\vert$ average CVSS $\vert$ avg CVSS with fixe $\vert$ Number of Fix $\vert$ Number of FileFix
+$\vert$----------$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+$\vert$Linux Kernel$\vert$115 mn$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+$\vert$Wireshark$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+$\vert$OpenSSL$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+$\vert$SystemD$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+
+\subsection*{Top 10 CWE}
+
+$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
+$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
+$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+
+\subsection*{Top 10 CWE with Fixes}
+
+$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
+$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
+$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+
+\subsection*{Top 10 Vulnerable Files}
+
+$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
+$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
+$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+
+\section*{Additional Libraries Included}
+
+In this tool, two custom made library are included:
+
+\subsection*{Git Utils}
+
+This library provide some useful function when trying to mine a git repository.
+The following methods are available
+
+\begin{itemize}
+\item retrievingFileFromSpecificCommit
+\item listOfCommitImpactingAFile
+\item previousCommitImpactingAFile
+\item gitBlame
+\item gitBlameNbDev
+\item getDevHistoryOfAFile (use Developer History class)
+\item getDeltaFile (Delta History)
+\item getListOfModifiedFile
+\item getCommitMessage
+\item getTimeCommit
+\end{itemize}
+
+this library work on local repository but also offer the possibility to clone a remote repository: 
+
+\texttt{kotlin
+   // for already existing git repo  
+     val git = GitUtilitary("pathto .git folder")
+   // to clone the repo
+     val git = GitUtilitary("remote repo adress","path to folder")
+}
+
+\subsection*{Misc}
+
+This library contains additional useful function such as downlading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+
+\section*{About Me}
+
+This tool was developped during my thesis and is made available to everyone :)
 
 \end{document}

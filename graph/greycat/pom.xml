@@ -41,5 +41,18 @@
             <version>11-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>datathings.public</id>
+            <url>https://registry.datathings.com/repository/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>datathings.public</id>
+            <url>https://registry.datathings.com/repository/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

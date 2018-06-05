@@ -42,8 +42,8 @@
         <module>utilitaries/gitUtils</module>
         <module>utilitaries/misc</module>
         <module>data7</module>
-        <module>graph/model</module>
-        <module>graph/greycat</module>
+        <!--<module>graph/model</module>
+        <module>graph/greycat</module>-->
     </modules>
 
     <build>
@@ -88,13 +88,10 @@
                 <version>1.16</version>
                 <configuration>
                     <verbose>false</verbose>
-                    <organizationName>Matthieu Jimenez</organizationName>
+                    <organizationName>University of Luxembourg, Matthieu Jimenez</organizationName>
                     <inceptionYear>2018</inceptionYear>
                     <projectName>Data7</projectName>
                     <licenseName>apache_v2</licenseName>
-                    <extraExtensions>
-                        <kt>java</kt>
-                    </extraExtensions>
                 </configuration>
                 <executions>
                     <execution>
@@ -109,17 +106,5 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>datathings.public</id>
-            <url>https://registry.datathings.com/repository/public/</url>
-        </repository>
-    </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>datathings.public</id>
-            <url>https://registry.datathings.com/repository/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
