@@ -18,7 +18,6 @@ import java.text.ParseException;
 import java.time.Year;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static data7.Exporter.loadDataset;
 import static data7.Resources.*;
@@ -155,8 +154,10 @@ public class CVEImporter {
      * @param listeners
      */
     private static void updateFinishedEvent(DatasetUpdateListener[] listeners) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.updatefinished();
+        if (listeners != null) {
+            for (DatasetUpdateListener listener : listeners) {
+                listener.updatefinished();
+            }
         }
     }
 
@@ -224,28 +225,28 @@ public class CVEImporter {
     public static void main(String[] args) throws IOException {
         long time = System.currentTimeMillis();
         System.out.println("Start Linux");
-        Data7 data7 = createDataset(CProjects.WIRESHARK,null);
-        //Exporter.toXml(data7.getVulnerabilitySet());
+        Data7 data7 = createDataset(CProjects.SYSTEMD, null);
+        Exporter.exportDatasetToXML(data7);
         //Exporter.toBinary(data7);
         System.out.println("End Linux : " + (System.currentTimeMillis() - time));
         /**time = System.currentTimeMillis();
-        System.out.println("Start Wireshark");
-        data7 = createDataset(CProjects.WIRESHARK);
-        Exporter.toXml(data7.getVulnerabilitySet());
-        Exporter.toBinary(data7);
-        System.out.println("End Wireshark : " + (System.currentTimeMillis() - time));
-        time = System.currentTimeMillis();
-        System.out.println("Start SSL");
-        data7 = createDataset(CProjects.OPEN_SSL);
-        Exporter.toXml(data7.getVulnerabilitySet());
-        Exporter.toBinary(data7);
-        System.out.println("End SSL : " + (System.currentTimeMillis() - time));
-        time = System.currentTimeMillis();
-        System.out.println("Start SystemD");
-        data7 = createDataset(CProjects.SYSTEMD);
-        Exporter.toXml(data7.getVulnerabilitySet());
-        Exporter.toBinary(data7);
-        System.out.println("End SystemD : " + (System.currentTimeMillis() - time));*/
+         System.out.println("Start Wireshark");
+         data7 = createDataset(CProjects.WIRESHARK);
+         Exporter.toXml(data7.getVulnerabilitySet());
+         Exporter.toBinary(data7);
+         System.out.println("End Wireshark : " + (System.currentTimeMillis() - time));
+         time = System.currentTimeMillis();
+         System.out.println("Start SSL");
+         data7 = createDataset(CProjects.OPEN_SSL);
+         Exporter.toXml(data7.getVulnerabilitySet());
+         Exporter.toBinary(data7);
+         System.out.println("End SSL : " + (System.currentTimeMillis() - time));
+         time = System.currentTimeMillis();
+         System.out.println("Start SystemD");
+         data7 = createDataset(CProjects.SYSTEMD);
+         Exporter.toXml(data7.getVulnerabilitySet());
+         Exporter.toBinary(data7);
+         System.out.println("End SystemD : " + (System.currentTimeMillis() - time));*/
     }
 
 

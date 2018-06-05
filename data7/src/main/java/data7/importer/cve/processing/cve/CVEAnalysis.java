@@ -32,7 +32,10 @@ public class CVEAnalysis {
         this.cveList = cveList;
         this.dataset = dataset;
         this.git = git;
-        this.listeners = listeners;
+        if (listeners == null){
+            this.listeners = new DatasetUpdateListener[0];
+        }else{
+        this.listeners = listeners;}
     }
 
     /**

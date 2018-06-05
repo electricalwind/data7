@@ -31,7 +31,10 @@ public class GitAnalysis {
     private GitAnalysis(Data7 dataset, DatasetUpdateListener[] listeners, GitActions git) {
         this.dataset = dataset;
         this.git = git;
-        this.listeners = listeners;
+        if (listeners == null){
+            this.listeners = new DatasetUpdateListener[0];
+        }else{
+            this.listeners = listeners;}
     }
 
     private void process() {
