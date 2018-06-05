@@ -181,8 +181,82 @@ but it can easily be extended to any other project where it is possible to find 
 
 ## How to use the tools
 
+1. To use the tool, the first step is to create a folder in your local storage that will gather all data.
+    The structure once run the tool should look like this
+    - myfolder
+        - git
+        - cve
+        - xml
+        - binary
+    
+2. Then head to data7/src/main/java/data7/Ressources.java and change the PATH_TO_SAVE value by your folder path.
+3. Once done, you can run mvn install and the tool is installed
+4. To call it from your code, just call 
+```java
+ import data7.project.CProjects;
+ import data7.project.Project;   
+ 
+Importer.updateOrCreateDatasetFor(aProject);
+// Projects are available in projects module
+//like CProjects.LINUX_KERNEL
+``` 
+    
+Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of linux, don't forget to rename linux into linux_kernel)
+
+## Statistics
+
+| Projects | Time to create | Number of Vulnerabilities | NoV with Fixes | average CVSS | avg CVSS with fixe | Number of Fix | Number of FileFix
+|----------|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+|Linux Kernel|115 mn|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+|Wireshark|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+|OpenSSL|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+|SystemD|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+
+### Top 10 CWE
+
+| Rank | Linux | Wireshark | OpenSSL | SystemD |
+|------|-------|-----------|---------|---------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
+| 8 | | | | |
+| 9 | | | | |
+| 10 | | | | |
 
 
-## How to integrate it to other tool?
+### Top 10 CWE with Fixes
+
+| Rank | Linux | Wireshark | OpenSSL | SystemD |
+|------|-------|-----------|---------|---------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
+| 8 | | | | |
+| 9 | | | | |
+| 10 | | | | |
+
+
+### Top 10 Vulnerable Files
+
+| Rank | Linux | Wireshark | OpenSSL | SystemD |
+|------|-------|-----------|---------|---------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
+| 8 | | | | |
+| 9 | | | | |
+| 10 | | | | |
 
 

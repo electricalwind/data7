@@ -34,6 +34,7 @@ public class Exporter {
      * @throws IOException
      */
     public static void saveDataset(Data7 data7) throws IOException {
+        Utils.checkFolderDestination(PATH_TO_BINARY);
         FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj", false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
@@ -71,6 +72,7 @@ public class Exporter {
      */
     public static void exportDatasetToXML(Data7 data7) {
         VulnerabilitySet dataset = data7.getVulnerabilitySet();
+        Utils.checkFolderDestination(PATH_TO_XML);
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

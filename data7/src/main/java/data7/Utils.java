@@ -6,6 +6,7 @@ import data7.model.change.FileInterest;
 import gitUtilitaries.GitActions;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -112,4 +113,17 @@ public class Utils {
         }
     }
 
+
+    /**
+     * Will create the folder of destination if not existing
+     *
+     * @param dest folder
+     */
+    public static void checkFolderDestination(String dest) {
+        File f = new File(dest);
+        if (!(f.exists() && f.isDirectory())) {
+            f.mkdirs();
+        }
+        return ;
+    }
 }
