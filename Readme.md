@@ -91,7 +91,8 @@ A FileInterest Object contains the text of the file and its fullPath in the proj
 The dataset can as well be exported as an XML file that will only contain vulnerability with reported fixes.
 The schema of the xml is the following:
 
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <data7 last_updated="YYYY-MM-DD HH:mm:ss CEST" project="project name">
       <cve id="CVE-YYYY-XXXXXX" last_modified="timestamp">
         <cwe></cwe>
@@ -108,6 +109,16 @@ The schema of the xml is the following:
               <file>
                 <before hash="aaaaaaaa" path="src/file.c">
                 Content of the file
+                </before>
+                <after path="src/file.c">
+                Content of the file
+                </after>
+              </file>
+            </files>
+          </commit>
+        </patches>
+      </cve>
+    </data7>
                 
 
 
