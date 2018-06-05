@@ -7,23 +7,23 @@
     <parent>
         <groupId>lu.jimenez.research</groupId>
         <artifactId>data7-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>data7</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
 
     <dependencies>
         <dependency>
             <groupId>lu.jimenez.research</groupId>
             <artifactId>data7-miscUtils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>lu.jimenez.research</groupId>
             <artifactId>data7-gitUtils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
