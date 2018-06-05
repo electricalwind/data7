@@ -1,0 +1,17 @@
+
+Lists of 15 third-party dependencies.
+     (The Apache Software License, Version 2.0) java-diff-utils (com.googlecode.java-diff-utils:diffutils:1.3.0 - http://code.google.com/p/java-diff-utils/)
+     (Apache 2) JavaEWAH (com.googlecode.javaewah:JavaEWAH:1.1.6 - https://github.com/lemire/javaewah)
+     (Revised BSD) JSch (com.jcraft:jsch:0.1.54 - http://www.jcraft.com/jsch/)
+     (The Apache Software License, Version 2.0) Commons Codec (commons-codec:commons-codec:1.6 - http://commons.apache.org/codec/)
+     (The Apache Software License, Version 2.0) Commons Logging (commons-logging:commons-logging:1.1.3 - http://commons.apache.org/proper/commons-logging/)
+     (Apache License, Version 2.0) data7-gitUtils (lu.jimenez.research:data7-gitUtils:1.0-SNAPSHOT - https://github.com/electricalwind/data7/data7-gitUtils)
+     (Apache License, Version 2.0) data7-miscUtils (lu.jimenez.research:data7-miscUtils:1.0-SNAPSHOT - https://github.com/electricalwind/data7/data7-miscUtils)
+     (Apache License, Version 2.0) Apache HttpClient (org.apache.httpcomponents:httpclient:4.3.6 - http://hc.apache.org/httpcomponents-client)
+     (Apache License, Version 2.0) Apache HttpCore (org.apache.httpcomponents:httpcore:4.3.3 - http://hc.apache.org/httpcomponents-core-ga)
+     (Eclipse Distribution License (New BSD License)) JGit - Core (org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r - http://www.eclipse.org/jgit//org.eclipse.jgit)
+     (The Apache Software License, Version 2.0) IntelliJ IDEA Annotations (org.jetbrains:annotations:13.0 - http://www.jetbrains.org)
+     (The Apache License, Version 2.0) org.jetbrains.kotlin:kotlin-stdlib (org.jetbrains.kotlin:kotlin-stdlib:1.2.20 - https://kotlinlang.org/)
+     (The Apache License, Version 2.0) org.jetbrains.kotlin:kotlin-stdlib-jdk7 (org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.20 - https://kotlinlang.org/)
+     (The Apache License, Version 2.0) org.jetbrains.kotlin:kotlin-stdlib-jdk8 (org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.20 - https://kotlinlang.org/)
+     (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.2 - http://www.slf4j.org)

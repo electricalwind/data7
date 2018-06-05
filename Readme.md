@@ -259,4 +259,42 @@ Note that on creation of the dataset it might be better for the largest project 
 | 9 | | | | |
 | 10 | | | | |
 
+## Additional Libraries Included
+
+In this tool, two custom made library are included:
+
+### Git Utils
+
+This library provide some useful function when trying to mine a git repository.
+The following methods are available
+
+* retrievingFileFromSpecificCommit
+* listOfCommitImpactingAFile
+* previousCommitImpactingAFile
+* gitBlame
+* gitBlameNbDev
+* getDevHistoryOfAFile (use Developer History class)
+* getDeltaFile (Delta History)
+* getListOfModifiedFile
+* getCommitMessage
+* getTimeCommit
+
+this library work on local repository but also offer the possibility to clone a remote repository: 
+
+```kotlin
+   // for already existing git repo  
+     val git = GitUtilitary("pathto .git folder")
+   // to clone the repo
+     val git = GitUtilitary("remote repo adress","path to folder")
+```
+
+### Misc
+
+This library contains additional useful function such as downlading a file, unzipping a file, normalizing a path and getting the recursive list of directories.
+
+## About Me
+
+This tool was developped during my thesis and is made available to everyone :)
+
+
 
