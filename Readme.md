@@ -201,63 +201,81 @@ Importer.updateOrCreateDatasetFor(aProject);
 //like CProjects.LINUX_KERNEL
 ``` 
     
-Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux_kernel)
+Note that on creation of the dataset it might be better for the largest project (Linux, Wireshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux_kernel)
 
 ## Statistics
 
-| Projects | Time to create | Number of vulnerabilities | NoV with Fixes | average CVSS | avg CVSS with fixes | Number of Fix | Number of FileFix
-|----------|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
-|Linux Kernel|115 mn|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
-|Wireshark|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
-|OpenSSL|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
-|SystemD|----------------|---------------------------|----------------|--------------|--------------------|---------------|--------------------|
+As of 5th June 2018
+
+| Projects   | Time to create | Dataset size |Number of vulnerabilities | NoV with Fixes | average CVSS | avg CVSS with fixes | Number of Fix | Number of FileFix| Number of Unique Vulnerable Files |
+|:----------:|:--------------:|:------------:|:------------------------:|:--------------:|:------------:|:-------------------:|:-------------:|:----------------:|:---------------------------------:|
+|Linux Kernel|115 mn          |279.7 MB      |2082                      |1202            |5.41          |5.34                 |1332           | 2612             |1508                               |
+|Wireshark   |129 mn          |561.9 MB      | 531                      | 265            |4.99          |5.01                 | 850           |  987             | 221                               |
+|OpenSSL     |  8 mn          |173.3 MB      | 187                      | 126            |5.34          |5.42                 | 493           | 1018             | 164                               |
+|SystemD     |  2 mn          |  2.4 MB      |   9                      |   5            |5.76          |5.60                 |   5           |    6             |   5                               |
+|Total       |254 mn          |  1.0 GB      |2809                      |1598            |5.375         |5.34                 |2680           | 4623             |1898                               |
 
 ### Top 10 CWE
 
-| Rank | Linux | Wireshark | OpenSSL | SystemD |
-|------|-------|-----------|---------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
-| 6 | | | | |
-| 7 | | | | |
-| 8 | | | | |
-| 9 | | | | |
-| 10 | | | | |
+| Rank | Linux    | Wireshark | OpenSSL | SystemD |
+|:----:|:--------:|:---------:|:-------:|:-------:|
+| 1    | 264 (318)|  20 (136) | 310 (32)| 20 (3)  |
+| 2    | 200 (219)| 399 (108) | 399 (28)| 264 (2) |
+| 3    | 399 (212)| 119  (98) | 116 (17)| 362 (2) |
+| 4    | 119 (204)| 189  (51) | 200 (15)| 787 (1) |
+| 5    |  20 (161)| 400  (14) |  20 (12)| 119 (1) |
+| 6    | 189 (106)|  74   (9) | 189 (11)|         |
+| 7    | 362  (89)| 476   (8) | 362  (5)|         |
+| 8    | 476  (45)| 134   (5) |         |         |
+| 9    | 284  (45)| 200   (4) |   -     |         |
+| 10   | 416  (28)| -         |   -     |         |
 
 
 ### Top 10 CWE with Fixes
 
-| Rank | Linux | Wireshark | OpenSSL | SystemD |
-|------|-------|-----------|---------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
-| 6 | | | | |
-| 7 | | | | |
-| 8 | | | | |
-| 9 | | | | |
-| 10 | | | | |
+| Rank | Linux    | Wireshark | OpenSSL | SystemD |
+|:----:|:--------:|:---------:|:-------:|:-------:|
+| 1    | 119 (163)|  20 (81)  | 310 (20)| 264 (1)|
+| 2    | 399 (146)| 399 (62)  | 399 (20)| 787 (1)|
+| 3    | 200 (137)| 119 (52)  | 200 (15)| 119 (1)|
+| 4    | 264 (135)| 400 (14)  | 119 (12)| 20 (1) |
+| 5    |  20 (134)| 189 (10)  |  20 (12)| 362 (1)|
+| 6    | 189  (88)|  74  (9)  | 189  (6)|        |
+| 7    | 362  (72)| 476  (8)  | 362  (4)|        |
+| 8    | 476  (35)| 19   (3)  | -       |        |
+| 9    | 416  (25)| 754  (3)  | -       |        |
+| 10   | 125  (20)| -         | -       |        |
+
+### Top 10 CWE ratio 
+
+| Rank | Linux    | Wireshark | OpenSSL  | SystemD  |
+|:----:|:--------:|:---------:|:--------:|:--------:|
+| 1    |  17 (100)| 400 (100) | 200 (100)| 787 (100)|
+| 2    | 415 (100)|  74 (100) |  20 (100)| 119 (100)|
+| 3    | 310  (92)| 476 (100) | 362 (80) | 264  (50)|
+| 4    |  19  (91)|  19 (100) | 399 (71) | 362  (50)|
+| 5    | 416  (89)| 754 (100) | 119 (70) |  20  (33)|
+| 6    | 125  (86)|  20  (60) | 310 (62) |          |
+| 7    |  20  (83)| 399  (57) | 189 (54) |          |
+| 8    | 189  (83)| 119  (53) | -        |          |
+| 9    | 362  (81)| 189  (20) | -        |          |
+| 10   | 119  (80)| -         | -        |          |
 
 
 ### Top 10 Vulnerable Files
 
-| Rank | Linux | Wireshark | OpenSSL | SystemD |
-|------|-------|-----------|---------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
-| 6 | | | | |
-| 7 | | | | |
-| 8 | | | | |
-| 9 | | | | |
-| 10 | | | | |
+| Rank | Linux                     | Wireshark                              | OpenSSL                    | SystemD                                |
+|:----:|:--------------------------|:---------------------------------------|:---------------------------|:---------------------------------------|
+| 1    | arch/x86/kvm/x86.c (17)   | epan/proto.c (24)                      | ssl/s3_clnt.c (53)         | src/resolve/resolved-dns-packet.c (2)  |
+| 2    | fs/namei.c (14)           | epan/dissectors/packet-nbap.c (19)     | ssl/s3_srvr.c (41)         | src/resolve/resolved-dns-packet.h (1)  |
+| 3    | net/socket.c (14)         | epan/dissectors/packet-ncp2222.inc (19)| ssl/d1_both.c (35)         | src/util.c (1)                         |
+| 4    | kernel/signal.c (14)      | epan/dissectors/packet-wccp.c (18)     | ssl/t1_lib.c (34)          | src/nss-mymachines/nss-mymachines.c (1)|
+| 5    | fs/namespace.c (14)       | epan/crypt/airpdcap.c (18)             | ssl/d1_pkt.c (22)          | src/tmpfiles/tmpfiles.c (1)            |
+| 6    | kernel/bpf/verifier.c (13)| epan/dissectors/packet-ber.c (17)      | crypto/asn1/tasn_dec.c (20)|                                        |
+| 7    | net/sctp/socket.c (13)    | epan/dissectors/packet-umts_fp.c (16)  | ssl/ssl.h (20)             |                                        |
+| 8    | fs/exec.c (13)            | epan/dissectors/packet-wbxml.c (15)    | ssl/s3_pkt.c (20)          |                                        |
+| 9    | arch/x86/kvm/vmx.c (13)   | epan/dissectors/packet-wsp.c (14)      | ssl/ssl_err.c (17)         |                                        |
+| 10   | fs/open.c (12)            | epan/dissectors/packet-wcp.c (13)      | crypto/x509/x509_vfy.c (16)|                                        |
 
 ## Additional Libraries Included
 
