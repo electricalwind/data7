@@ -243,61 +243,79 @@ Importer.updateOrCreateDatasetFor(aProject);
 //like CProjects.LINUX\_KERNEL
 ``` 
 
-Note that on creation of the dataset it might be better for the largest project (Linux, Wrieshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux\_kernel)
+Note that on creation of the dataset it might be better for the largest project (Linux, Wireshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux\_kernel)
 
 \section*{Statistics}
 
-$\vert$ Projects $\vert$ Time to create $\vert$ Number of vulnerabilities $\vert$ NoV with Fixes $\vert$ average CVSS $\vert$ avg CVSS with fixes $\vert$ Number of Fix $\vert$ Number of FileFix
-$\vert$----------$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
-$\vert$Linux Kernel$\vert$115 mn$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
-$\vert$Wireshark$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
-$\vert$OpenSSL$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
-$\vert$SystemD$\vert$----------------$\vert$---------------------------$\vert$----------------$\vert$--------------$\vert$--------------------$\vert$---------------$\vert$--------------------$\vert$
+As of 5th June 2018
+
+$\vert$ Projects   $\vert$ Time to create $\vert$ Dataset size $\vert$Number of vulnerabilities $\vert$ NoV with Fixes $\vert$ average CVSS $\vert$ avg CVSS with fixes $\vert$ Number of Fix $\vert$ Number of FileFix$\vert$ Number of Unique Vulnerable Files $\vert$
+$\vert$:----------:$\vert$:--------------:$\vert$:------------:$\vert$:------------------------:$\vert$:--------------:$\vert$:------------:$\vert$:-------------------:$\vert$:-------------:$\vert$:----------------:$\vert$:---------------------------------:$\vert$
+$\vert$Linux Kernel$\vert$115 mn          $\vert$279.7 MB      $\vert$2082                      $\vert$1202            $\vert$5.41          $\vert$5.34                 $\vert$1332           $\vert$ 2612             $\vert$1508                               $\vert$
+$\vert$Wireshark   $\vert$129 mn          $\vert$561.9 MB      $\vert$ 531                      $\vert$ 265            $\vert$4.99          $\vert$5.01                 $\vert$ 850           $\vert$  987             $\vert$ 221                               $\vert$
+$\vert$OpenSSL     $\vert$  8 mn          $\vert$173.3 MB      $\vert$ 187                      $\vert$ 126            $\vert$5.34          $\vert$5.42                 $\vert$ 493           $\vert$ 1018             $\vert$ 164                               $\vert$
+$\vert$SystemD     $\vert$  2 mn          $\vert$  2.4 MB      $\vert$   9                      $\vert$   5            $\vert$5.76          $\vert$5.60                 $\vert$   5           $\vert$    6             $\vert$   5                               $\vert$
+$\vert$Total       $\vert$254 mn          $\vert$  1.0 GB      $\vert$2809                      $\vert$1598            $\vert$5.375         $\vert$5.34                 $\vert$2680           $\vert$ 4623             $\vert$1898                               $\vert$
 
 \subsection*{Top 10 CWE}
 
-$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
-$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
-$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ Rank $\vert$ Linux    $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
+$\vert$:----:$\vert$:--------:$\vert$:---------:$\vert$:-------:$\vert$:-------:$\vert$
+$\vert$ 1    $\vert$ 264 (318)$\vert$  20 (136) $\vert$ 310 (32)$\vert$ 20 (3)  $\vert$
+$\vert$ 2    $\vert$ 200 (219)$\vert$ 399 (108) $\vert$ 399 (28)$\vert$ 264 (2) $\vert$
+$\vert$ 3    $\vert$ 399 (212)$\vert$ 119  (98) $\vert$ 116 (17)$\vert$ 362 (2) $\vert$
+$\vert$ 4    $\vert$ 119 (204)$\vert$ 189  (51) $\vert$ 200 (15)$\vert$ 787 (1) $\vert$
+$\vert$ 5    $\vert$  20 (161)$\vert$ 400  (14) $\vert$  20 (12)$\vert$ 119 (1) $\vert$
+$\vert$ 6    $\vert$ 189 (106)$\vert$  74   (9) $\vert$ 189 (11)$\vert$         $\vert$
+$\vert$ 7    $\vert$ 362  (89)$\vert$ 476   (8) $\vert$ 362  (5)$\vert$         $\vert$
+$\vert$ 8    $\vert$ 476  (45)$\vert$ 134   (5) $\vert$         $\vert$         $\vert$
+$\vert$ 9    $\vert$ 284  (45)$\vert$ 200   (4) $\vert$   -     $\vert$         $\vert$
+$\vert$ 10   $\vert$ 416  (28)$\vert$ -         $\vert$   -     $\vert$         $\vert$
 
 \subsection*{Top 10 CWE with Fixes}
 
-$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
-$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
-$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ Rank $\vert$ Linux    $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
+$\vert$:----:$\vert$:--------:$\vert$:---------:$\vert$:-------:$\vert$:-------:$\vert$
+$\vert$ 1    $\vert$ 119 (163)$\vert$  20 (81)  $\vert$ 310 (20)$\vert$ 264 (1)$\vert$
+$\vert$ 2    $\vert$ 399 (146)$\vert$ 399 (62)  $\vert$ 399 (20)$\vert$ 787 (1)$\vert$
+$\vert$ 3    $\vert$ 200 (137)$\vert$ 119 (52)  $\vert$ 200 (15)$\vert$ 119 (1)$\vert$
+$\vert$ 4    $\vert$ 264 (135)$\vert$ 400 (14)  $\vert$ 119 (12)$\vert$ 20 (1) $\vert$
+$\vert$ 5    $\vert$  20 (134)$\vert$ 189 (10)  $\vert$  20 (12)$\vert$ 362 (1)$\vert$
+$\vert$ 6    $\vert$ 189  (88)$\vert$  74  (9)  $\vert$ 189  (6)$\vert$        $\vert$
+$\vert$ 7    $\vert$ 362  (72)$\vert$ 476  (8)  $\vert$ 362  (4)$\vert$        $\vert$
+$\vert$ 8    $\vert$ 476  (35)$\vert$ 19   (3)  $\vert$ -       $\vert$        $\vert$
+$\vert$ 9    $\vert$ 416  (25)$\vert$ 754  (3)  $\vert$ -       $\vert$        $\vert$
+$\vert$ 10   $\vert$ 125  (20)$\vert$ -         $\vert$ -       $\vert$        $\vert$
+
+\subsection*{Top 10 CWE ratio}
+
+$\vert$ Rank $\vert$ Linux    $\vert$ Wireshark $\vert$ OpenSSL  $\vert$ SystemD  $\vert$
+$\vert$:----:$\vert$:--------:$\vert$:---------:$\vert$:--------:$\vert$:--------:$\vert$
+$\vert$ 1    $\vert$  17 (100)$\vert$ 400 (100) $\vert$ 200 (100)$\vert$ 787 (100)$\vert$
+$\vert$ 2    $\vert$ 415 (100)$\vert$  74 (100) $\vert$  20 (100)$\vert$ 119 (100)$\vert$
+$\vert$ 3    $\vert$ 310  (92)$\vert$ 476 (100) $\vert$ 362 (80) $\vert$ 264  (50)$\vert$
+$\vert$ 4    $\vert$  19  (91)$\vert$  19 (100) $\vert$ 399 (71) $\vert$ 362  (50)$\vert$
+$\vert$ 5    $\vert$ 416  (89)$\vert$ 754 (100) $\vert$ 119 (70) $\vert$  20  (33)$\vert$
+$\vert$ 6    $\vert$ 125  (86)$\vert$  20  (60) $\vert$ 310 (62) $\vert$          $\vert$
+$\vert$ 7    $\vert$  20  (83)$\vert$ 399  (57) $\vert$ 189 (54) $\vert$          $\vert$
+$\vert$ 8    $\vert$ 189  (83)$\vert$ 119  (53) $\vert$ -        $\vert$          $\vert$
+$\vert$ 9    $\vert$ 362  (81)$\vert$ 189  (20) $\vert$ -        $\vert$          $\vert$
+$\vert$ 10   $\vert$ 119  (80)$\vert$ -         $\vert$ -        $\vert$          $\vert$
 
 \subsection*{Top 10 Vulnerable Files}
 
-$\vert$ Rank $\vert$ Linux $\vert$ Wireshark $\vert$ OpenSSL $\vert$ SystemD $\vert$
-$\vert$------$\vert$-------$\vert$-----------$\vert$---------$\vert$---------$\vert$
-$\vert$ 1 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 2 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 3 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 4 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 5 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 6 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 7 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 8 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 9 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
-$\vert$ 10 $\vert$ $\vert$ $\vert$ $\vert$ $\vert$
+$\vert$ Rank $\vert$ Linux                     $\vert$ Wireshark                              $\vert$ OpenSSL                    $\vert$ SystemD                                $\vert$
+$\vert$:----:$\vert$:--------------------------$\vert$:---------------------------------------$\vert$:---------------------------$\vert$:---------------------------------------$\vert$
+$\vert$ 1    $\vert$ arch/x86/kvm/x86.c (17)   $\vert$ epan/proto.c (24)                      $\vert$ ssl/s3\emph{clnt.c (53)         $\vert$ src/resolve/resolved-dns-packet.c (2)  $\vert$
+$\vert$ 2    $\vert$ fs/namei.c (14)           $\vert$ epan/dissectors/packet-nbap.c (19)     $\vert$ ssl/s3}srvr.c (41)         $\vert$ src/resolve/resolved-dns-packet.h (1)  $\vert$
+$\vert$ 3    $\vert$ net/socket.c (14)         $\vert$ epan/dissectors/packet-ncp2222.inc (19)$\vert$ ssl/d1\emph{both.c (35)         $\vert$ src/util.c (1)                         $\vert$
+$\vert$ 4    $\vert$ kernel/signal.c (14)      $\vert$ epan/dissectors/packet-wccp.c (18)     $\vert$ ssl/t1}lib.c (34)          $\vert$ src/nss-mymachines/nss-mymachines.c (1)$\vert$
+$\vert$ 5    $\vert$ fs/namespace.c (14)       $\vert$ epan/crypt/airpdcap.c (18)             $\vert$ ssl/d1\emph{pkt.c (22)          $\vert$ src/tmpfiles/tmpfiles.c (1)            $\vert$
+$\vert$ 6    $\vert$ kernel/bpf/verifier.c (13)$\vert$ epan/dissectors/packet-ber.c (17)      $\vert$ crypto/asn1/tasn}dec.c (20)$\vert$                                        $\vert$
+$\vert$ 7    $\vert$ net/sctp/socket.c (13)    $\vert$ epan/dissectors/packet-umts\emph{fp.c (16)  $\vert$ ssl/ssl.h (20)             $\vert$                                        $\vert$
+$\vert$ 8    $\vert$ fs/exec.c (13)            $\vert$ epan/dissectors/packet-wbxml.c (15)    $\vert$ ssl/s3}pkt.c (20)          $\vert$                                        $\vert$
+$\vert$ 9    $\vert$ arch/x86/kvm/vmx.c (13)   $\vert$ epan/dissectors/packet-wsp.c (14)      $\vert$ ssl/ssl\emph{err.c (17)         $\vert$                                        $\vert$
+$\vert$ 10   $\vert$ fs/open.c (12)            $\vert$ epan/dissectors/packet-wcp.c (13)      $\vert$ crypto/x509/x509}vfy.c (16)$\vert$                                        $\vert$
 
 \section*{Additional Libraries Included}
 
