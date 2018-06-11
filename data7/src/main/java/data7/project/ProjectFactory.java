@@ -45,19 +45,4 @@ public class ProjectFactory {
         }
     }
 
-
-    public static TreeMap<Long, String> retrieveProjectRelease(String name) {
-        switch (name) {
-            case "linux_kernel":
-                return LINUX_VERSIONS();
-            case "openssl":
-                return OPENSSL_VERSION();
-            case "wireshark":
-                return WIRESHARK_VERSION();
-            case "systemd":
-                return SYSTEMD_VERSION();
-            default:
-                return null;
-        }
-    }
 }
