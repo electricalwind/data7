@@ -195,13 +195,22 @@ but it can easily be extended to any other project where it is possible to find 
 ```java
  import data7.project.CProjects;
  import data7.project.Project;   
- 
+ import data7.Importer;
+ import data7.Exporter;
+ //To create or update a project
 Importer.updateOrCreateDatasetFor(aProject);
 // Projects are available in projects module
 //like CProjects.LINUX_KERNEL
+//To simply load a dataset without any update
+Exporter.loadDataset(project);
+// here just the name (String) is enough
+
+// To export to xml
+Exporter.exportDatasetToXML(data7)
+
 ``` 
     
-Note that on creation of the dataset it might be better for the largest project (Linux, Wireshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename Linux into linux_kernel)
+Note that on creation of the dataset it might be better for the largest project (Linux, Wireshark)to first clone the git repository using command line in your folder under the subfolder git (in the case of Linux, don't forget to rename the created folder "linux" into "linux_kernel")
 
 ## Statistics
 
@@ -224,11 +233,11 @@ As of 5th June 2018
 | 3    | 399 (212)| 119  (98) | 116 (17)| 362 (2) |
 | 4    | 119 (204)| 189  (51) | 200 (15)| 787 (1) |
 | 5    |  20 (161)| 400  (14) |  20 (12)| 119 (1) |
-| 6    | 189 (106)|  74   (9) | 189 (11)|         |
-| 7    | 362  (89)| 476   (8) | 362  (5)|         |
-| 8    | 476  (45)| 134   (5) |         |         |
-| 9    | 284  (45)| 200   (4) |   -     |         |
-| 10   | 416  (28)| -         |   -     |         |
+| 6    | 189 (106)|  74   (9) | 189 (11)| -       |
+| 7    | 362  (89)| 476   (8) | 362  (5)| -       |
+| 8    | 476  (45)| 134   (5) |   -     | -       |
+| 9    | 284  (45)| 200   (4) |   -     | -       |
+| 10   | 416  (28)| -         |   -     | -       |
 
 
 ### Top 10 CWE with Fixes
@@ -255,11 +264,11 @@ As of 5th June 2018
 | 3    | 310  (92)| 476 (100) | 362 (80) | 264  (50)|
 | 4    |  19  (91)|  19 (100) | 399 (71) | 362  (50)|
 | 5    | 416  (89)| 754 (100) | 119 (70) |  20  (33)|
-| 6    | 125  (86)|  20  (60) | 310 (62) |          |
-| 7    |  20  (83)| 399  (57) | 189 (54) |          |
-| 8    | 189  (83)| 119  (53) | -        |          |
-| 9    | 362  (81)| 189  (20) | -        |          |
-| 10   | 119  (80)| -         | -        |          |
+| 6    | 125  (86)|  20  (60) | 310 (62) | -        |
+| 7    |  20  (83)| 399  (57) | 189 (54) | -        |
+| 8    | 189  (83)| 119  (53) | -        | -        |
+| 9    | 362  (81)| 189  (20) | -        | -        |
+| 10   | 119  (80)| -         | -        | -        |
 
 
 ### Top 10 Vulnerable Files
@@ -271,11 +280,11 @@ As of 5th June 2018
 | 3    | net/socket.c (14)         | epan/dissectors/packet-ncp2222.inc (19)| ssl/d1_both.c (35)         | src/util.c (1)                         |
 | 4    | kernel/signal.c (14)      | epan/dissectors/packet-wccp.c (18)     | ssl/t1_lib.c (34)          | src/nss-mymachines/nss-mymachines.c (1)|
 | 5    | fs/namespace.c (14)       | epan/crypt/airpdcap.c (18)             | ssl/d1_pkt.c (22)          | src/tmpfiles/tmpfiles.c (1)            |
-| 6    | kernel/bpf/verifier.c (13)| epan/dissectors/packet-ber.c (17)      | crypto/asn1/tasn_dec.c (20)|                                        |
-| 7    | net/sctp/socket.c (13)    | epan/dissectors/packet-umts_fp.c (16)  | ssl/ssl.h (20)             |                                        |
-| 8    | fs/exec.c (13)            | epan/dissectors/packet-wbxml.c (15)    | ssl/s3_pkt.c (20)          |                                        |
-| 9    | arch/x86/kvm/vmx.c (13)   | epan/dissectors/packet-wsp.c (14)      | ssl/ssl_err.c (17)         |                                        |
-| 10   | fs/open.c (12)            | epan/dissectors/packet-wcp.c (13)      | crypto/x509/x509_vfy.c (16)|                                        |
+| 6    | kernel/bpf/verifier.c (13)| epan/dissectors/packet-ber.c (17)      | crypto/asn1/tasn_dec.c (20)| -                                      |
+| 7    | net/sctp/socket.c (13)    | epan/dissectors/packet-umts_fp.c (16)  | ssl/ssl.h (20)             | -                                      |
+| 8    | fs/exec.c (13)            | epan/dissectors/packet-wbxml.c (15)    | ssl/s3_pkt.c (20)          | -                                      |
+| 9    | arch/x86/kvm/vmx.c (13)   | epan/dissectors/packet-wsp.c (14)      | ssl/ssl_err.c (17)         | -                                      |
+| 10   | fs/open.c (12)            | epan/dissectors/packet-wcp.c (13)      | crypto/x509/x509_vfy.c (16)| -                                      |
 
 ## Additional Libraries Included
 
@@ -316,7 +325,7 @@ For those wishing to analyse cwe as well a last library is made available. The l
 ```java
 Importer.getListOfCWE();
 ```
-This call will download on the nvd website the xml with all the description of CWE and parse it before serializing for good. This is especially useful for studies that focus on CWE when using the data7. In addition a fiel childOf is present for each CWE which allows to rebuild the hierarchy of CWE type.
+This call will download on the nvd website the xml with all the description of CWE and parse it before serializing for good. This is especially useful for studies that focus on CWE when using the data7. In addition a field childOf is present for each CWE which allows to rebuild the hierarchy of CWE type.
 
 ## About Me
 
