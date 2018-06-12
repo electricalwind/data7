@@ -33,6 +33,7 @@ To create and update a dataset an internet connection is required. However nothi
 Other dependencies are handled through maven.
 
 ## How does it work ?
+
 For a given project P
 
 * Creating a dataset
@@ -174,10 +175,15 @@ but it can easily be extended to any other project where it is possible to find 
 
 *  name of the project as it appears in NVD database, e.g, linux_kernel
 *  url of a git remote repository, e.g, https://github.com/torvalds/linux
-*  regular expression catching link to remote repository and hashes in it, e.g, .*?(github\\.com|git\\.kernel\\.org).*?(commit)+.*?(h\\=|/)+([a-f0-9]+)
+*  regular expression catching link to remote repository and hashes in it, e.g, 
+```
+.*?(github\\.com|git\\.kernel\\.org).*?(commit)+.*?(h\\=|/)+([a-f0-9]+)
+```
 *  url of a bug tracker, e.g, https://bugzilla.kernel.org/
-*  regular expression catching link to bug tracker and bug id in it, e.g, .*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)
-*  regular expression catching bug id in git commit message, e.g, .*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)
+*  regular expression catching link to bug tracker and bug id in it, e.g,
+```.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)```
+*  regular expression catching bug id in git commit message, e.g, 
+```.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)```
 
 ## How to use the tools
 
@@ -192,6 +198,7 @@ but it can easily be extended to any other project where it is possible to find 
 2. Then head to data7/src/main/java/data7/Ressources.java and change the PATH_TO_SAVE value by your folder path.
 3. Once done, you can run mvn install and the tool is installed
 4. To call it from your code, just call 
+
 ```java
  import data7.project.CProjects;
  import data7.project.Project;   
