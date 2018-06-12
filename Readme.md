@@ -181,9 +181,13 @@ but it can easily be extended to any other project where it is possible to find 
 ```
 *  url of a bug tracker, e.g, https://bugzilla.kernel.org/
 *  regular expression catching link to bug tracker and bug id in it, e.g,
-```.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)```
+```
+.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)
+```
 *  regular expression catching bug id in git commit message, e.g, 
-```.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)```
+```
+.*(bugzilla\\.kernel\\.org).*?(id\\=)([0-9]+)
+```
 
 ## How to use the tools
 
