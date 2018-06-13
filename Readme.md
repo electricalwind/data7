@@ -191,7 +191,8 @@ but it can easily be extended to any other project where it is possible to find 
 
 ## How to use the tools
 
-1. To use the tool, the first step is to create a folder in your local storage that will gather all data.
+1. you can run mvn install and the tool is installed
+2. To use the tool, the first step is to create a folder in your local storage that will gather all data.
     The structure once run the tool should look like this
     - myfolder
         - git
@@ -199,25 +200,31 @@ but it can easily be extended to any other project where it is possible to find 
         - xml
         - binary
     
-2. Then head to data7/src/main/java/data7/Ressources.java and change the PATH_TO_SAVE value by your folder path.
-3. Once done, you can run mvn install and the tool is installed
-4. To call it from your code, just call 
+3. Once done, just call it as follow:
 
 ```java
  import data7.project.CProjects;
  import data7.project.Project;   
  import data7.Importer;
  import data7.Exporter;
+ import data7.ResourcesPath;
+ 
+ //Indicate your path
+ ResourcesPath path = new ResourcesPath("path to your folder");
+
  //To create or update a project
-Importer.updateOrCreateDatasetFor(aProject);
+Importer importer = new Importer(path);
+importer.updateOrCreateDatasetFor(aProject);
 // Projects are available in projects module
 //like CProjects.LINUX_KERNEL
+
 //To simply load a dataset without any update
-Exporter.loadDataset(project);
+Exporter exporter = new Exporter(path);
+exporter.loadDataset(project);
 // here just the name (String) is enough
 
 // To export to xml
-Exporter.exportDatasetToXML(data7)
+exporter.exportDatasetToXML(data7);
 
 ``` 
     

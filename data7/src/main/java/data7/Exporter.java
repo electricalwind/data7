@@ -9,9 +9,9 @@ package data7;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@ package data7;
  * limitations under the License.
  * #L%
  */
-
 
 
 import data7.model.CWE;
@@ -48,6 +47,11 @@ import static data7.Resources.*;
 
 public class Exporter {
 
+    private final ResourcesPath path;
+
+    public Exporter(ResourcesPath path) {
+        this.path = path;
+    }
 
     /**
      * Method to save the current data7 in an object file that will appear in the selected folder
@@ -55,9 +59,9 @@ public class Exporter {
      * @param data7 to save as binary
      * @throws IOException
      */
-    public static void saveDataset(Data7 data7) throws IOException {
-        Utils.checkFolderDestination(PATH_TO_BINARY);
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + data7.getVulnerabilitySet().getProjectName() + "-data7.obj", false);
+    public  void saveDataset(Data7 data7) throws IOException {
+        Utils.checkFolderDestination(path.getBinaryPath());
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getVulnerabilitySet().getProjectName() + "-data7.obj", false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
         oos.close();
@@ -71,8 +75,8 @@ public class Exporter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static Data7 loadDataset(String project) throws IOException, ClassNotFoundException {
-        File file = new File(PATH_TO_BINARY + project + "-data7.obj");
+    public  Data7 loadDataset(String project) throws IOException, ClassNotFoundException {
+        File file = new File(path.getBinaryPath() + project + "-data7.obj");
         if (file.exists()) {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream read = new ObjectInputStream(fileIn);
@@ -92,9 +96,9 @@ public class Exporter {
      *
      * @param data7 to export to xml
      */
-    public static void exportDatasetToXML(Data7 data7) {
+    public void exportDatasetToXML(Data7 data7) {
         VulnerabilitySet dataset = data7.getVulnerabilitySet();
-        Utils.checkFolderDestination(PATH_TO_XML);
+        Utils.checkFolderDestination(path.getXmlPath());
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -191,7 +195,7 @@ public class Exporter {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(PATH_TO_XML + dataset.getProjectName() + "-data7.xml");
+            StreamResult result = new StreamResult(path.getXmlPath() + dataset.getProjectName() + "-data7.xml");
 
             transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -218,11 +222,32 @@ public class Exporter {
      * @param cweList
      * @throws IOException
      */
-    public static void saveCWEList(List<CWE> cweList) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH_TO_BINARY + CWE_OBJ, false);
+    public void saveCWEList(List<CWE> cweList) throws IOException {
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + CWE_OBJ, false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(cweList);
         oos.close();
         fos.close();
+    }
+
+    /**
+     * Method to load the CWE list  that have been save in its binary form
+     *
+     * @return Data7
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public  List<CWE> loadCWEMist() throws IOException, ClassNotFoundException {
+        File file = new File(path.getBinaryPath() + CWE_OBJ);
+        if (file.exists()) {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream read = new ObjectInputStream(fileIn);
+            List<CWE> data = (List<CWE>) read.readObject();
+            read.close();
+            fileIn.close();
+            return data;
+        } else {
+            return null;
+        }
     }
 }
