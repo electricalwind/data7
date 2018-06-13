@@ -12,7 +12,7 @@ public class ResourcesPath {
 
     public ResourcesPath(String path) {
         File f = new File(path);
-        if (!(f.exists() && f.isDirectory())) {
+        if (f.exists() && f.isDirectory()) {
             savingPath = path;
             binaryPath = savingPath + "binary/";
             gitPath = savingPath + "git/";
