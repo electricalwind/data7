@@ -44,6 +44,7 @@ import java.util.concurrent.*;
 
 import static data7.Resources.*;
 
+import static data7.Utils.checkFolderDestination;
 import static data7.Utils.dateToLongWoM;
 
 /**
@@ -154,6 +155,7 @@ public class CVEImporter {
      * @throws IOException
      */
     private  String downloadCVEXML(String year) throws IOException {
+        checkFolderDestination(path.getCvePath());
         Misc.downloadFromURL(CVE_URL + year + XML, path.getCvePath());
         String fpath = path.getCvePath() + FILE_START + year + XML;
         File zip = new File(fpath);
