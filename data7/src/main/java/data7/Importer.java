@@ -29,7 +29,7 @@ import data7.model.Data7;
 import data7.project.CProjects;
 import data7.project.Project;
 
-import javax.xml.bind.JAXBException;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -51,10 +51,9 @@ public class Importer {
      *
      * @return List of CWE
      * @throws IOException
-     * @throws JAXBException
      * @throws ClassNotFoundException
      */
-    public List<CWE> getListOfCWE() throws IOException, JAXBException, ClassNotFoundException {
+    public List<CWE> getListOfCWE() throws IOException, ClassNotFoundException {
         File cweBinary = new File(path.getBinaryPath() + CWE_OBJ);
         if (cweBinary.exists()) {
             return new Exporter(path).loadCWEMist();
@@ -94,9 +93,10 @@ public class Importer {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException {
-        ResourcesPath path = new ResourcesPath("/Users/matthieu/Desktop/data7/");
+    public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException{
+        ResourcesPath path = new ResourcesPath("/Users/matthieu/Desktop/data7-2/");
         Importer importer = new Importer(path);
+        importer.getListOfCWE();
         importer.updateOrCreateDatasetFor(CProjects.LINUX_KERNEL);
         importer.updateOrCreateDatasetFor(CProjects.OPEN_SSL);
         importer.updateOrCreateDatasetFor(CProjects.WIRESHARK);

@@ -28,7 +28,6 @@ import data7.ResourcesPath;
 import data7.model.CWE;
 import miscUtils.Misc;
 
-import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.util.List;
 
@@ -43,10 +42,10 @@ public class CWEImporter {
     }
 
 
-    public List<CWE> retrieveCWEOnline() throws IOException, JAXBException {
+    public List<CWE> retrieveCWEOnline() throws IOException {
         Misc.downloadFromURL(Resources.CWE_URL, path.getCvePath());
         Misc.unzipping(path.getCvePath() + CWE_XML_FILE + ".zip", path.getCvePath());
-        List<CWE> cweList = new Parser(path.getCvePath() + CWE_XML_FILE).cweList();
+        List<CWE> cweList = CWEParser.parse(path);
         new Exporter(path).saveCWEList(cweList);
         return cweList;
     }

@@ -21,13 +21,7 @@ object Misc {
      */
     @JvmStatic
     fun downloadFromURL(link: String, savingPath: String) {
-        if (link.split(":").first().last() == 's') {
-            System.setProperty("java.protocol.handler.pkgs",
-                    "com.sun.net.ssl.internal.www.protocol")
-            Security.addProvider(com.sun.net.ssl.internal.ssl.Provider())
-        }
         val filename = link.split("/").last()
-
         val url = URL(link)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"

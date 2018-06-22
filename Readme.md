@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-![version](https://img.shields.io/badge/data7-1.2-green.svg)
+![version](https://img.shields.io/badge/data7-1.3-green.svg)
 
 ## What is it?
 
