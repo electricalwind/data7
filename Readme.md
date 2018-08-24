@@ -4,6 +4,8 @@
 
 ![version](https://img.shields.io/badge/data7-1.3-green.svg)
 
+[![Paper](https://img.shields.io/badge/orbilu-blue.svg)](http://hdl.handle.net/10993/36157)
+
 ## What is it?
 
 Data7 is a tool that put together vulnerability report and vulnerability patches  of a given software project in an automated way under the form of a dataset. Once created the dataset can then easily be updated with the latest information available. The information that can be found in the dataset is the following:
@@ -351,5 +353,19 @@ This call will download on the nvd website the xml with all the description of C
 
 This tool was developed during my thesis and is made available to everyone. :)
 
+## Citing Data7
 
+The Data7 was published as an engineering paper in SCAM'18. You can find it the paper at this  [link](http://hdl.handle.net/10993/36157).
+
+To cite Data7, pleae use the following bib entry;
+
+@inproceedings{JimenezPT18,
+author    = {Matthieu Jimenez and
+               Mike Papadakis and
+               Yves Le Traon},
+  title     = {Enabling the Continous Analysis of Security Vulnerabilities with VulData7},
+  booktitle = {Proceedings of the 18th IEEE International Working Conference on Source Code Analysis and Manipulation
+               {SCAM} 2018, Madrid, Spain, September 23-24, 2018},
+  year      = {2018},
+}
 
