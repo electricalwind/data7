@@ -4,7 +4,7 @@
 
 ![version](https://img.shields.io/badge/data7-1.3-green.svg)
 
-[![Paper](https://img.shields.io/badge/orbilu-blue.svg)](http://hdl.handle.net/10993/36157)
+[![Paper](https://img.shields.io/badge/Paper-orbilu-blue.svg)](http://hdl.handle.net/10993/36157)
 
 ## What is it?
 
