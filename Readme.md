@@ -6,10 +6,10 @@
 
 ## Citing Data7
 
-The Data7 was published as an engineering paper in SCAM'18. You can find it here. 
-[![Paper](https://img.shields.io/badge/Paper-orbilu-blue.svg)](http://hdl.handle.net/10993/36157)>
+The Data7 was published as an engineering paper in SCAM'18. You can find it here:
+[![Paper](https://img.shields.io/badge/Paper-orbilu-blue.svg)](http://hdl.handle.net/10993/36157)
 
-To cite Data7, pleae use the following bib entry;
+To cite Data7, pleae use the following bib entry:
 [![Cite](https://img.shields.io/badge/Citing-bibtex-green.svg)](data7.bib)
 
 ## What is it?
