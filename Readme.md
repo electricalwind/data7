@@ -4,8 +4,12 @@
 
 ![version](https://img.shields.io/badge/data7-1.3-green.svg)
 
-[![Paper](https://img.shields.io/badge/Paper-orbilu-blue.svg)](http://hdl.handle.net/10993/36157)
+## Citing Data7
 
+The Data7 was published as an engineering paper in SCAM'18. You can find it here. 
+[![Paper](https://img.shields.io/badge/Paper-orbilu-blue.svg)](http://hdl.handle.net/10993/36157)>
+
+To cite Data7, pleae use the following bib entry;
 [![Cite](https://img.shields.io/badge/Citing-bibtex-green.svg)](data7.bib)
 
 ## What is it?
@@ -355,19 +359,4 @@ This call will download on the nvd website the xml with all the description of C
 
 This tool was developed during my thesis and is made available to everyone. :)
 
-## Citing Data7
-
-The Data7 was published as an engineering paper in SCAM'18. You can find it the paper at this  [link](http://hdl.handle.net/10993/36157).
-
-To cite Data7, pleae use the following bib entry;
-
-@inproceedings{JimenezPT18,
-author    = {Matthieu Jimenez and
-               Mike Papadakis and
-               Yves Le Traon},
-  title     = {Enabling the Continous Analysis of Security Vulnerabilities with VulData7},
-  booktitle = {Proceedings of the 18th IEEE International Working Conference on Source Code Analysis and Manipulation
-               {SCAM} 2018, Madrid, Spain, September 23-24, 2018},
-  year      = {2018},
-}
 
