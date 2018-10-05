@@ -26,6 +26,8 @@ import data7.importer.cve.DatasetUpdateListener;
 import data7.importer.cwe.CWEImporter;
 import data7.model.CWE;
 import data7.model.Data7;
+import data7.model.vulnerability.Vulnerability;
+import data7.project.Android;
 import data7.project.CProjects;
 import data7.project.Project;
 
@@ -62,6 +64,7 @@ public class Importer {
         }
     }
 
+
     /**
      * Function to create or update a data7 for a given project
      *
@@ -74,9 +77,9 @@ public class Importer {
      */
     public Data7 updateOrCreateDatasetFor(Project project, DatasetUpdateListener... listeners) throws ParseException, IOException, ClassNotFoundException {
         if (project != null) {
-            File data7Binary = new File(path.getBinaryPath() + project.getName() + DATA7_OBJ);
+            File data7Binary = new File(path.getBinaryPath() + project.getSavingName() + DATA7_OBJ);
             if (data7Binary.exists()) {
-                return new CVEImporter(path).updateDataset(project.getName(), listeners);
+                return new CVEImporter(path).updateDataset(project.getSavingName(), listeners);
             } else {
                 return new CVEImporter(path).createDataset(project, listeners);
             }
@@ -94,13 +97,18 @@ public class Importer {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException{
-        ResourcesPath path = new ResourcesPath("/Users/matthieu/Desktop/data7-2/");
+        ResourcesPath path = new ResourcesPath("/Users/matthieu/Desktop/data3/");
         Importer importer = new Importer(path);
-        importer.getListOfCWE();
-        importer.updateOrCreateDatasetFor(CProjects.LINUX_KERNEL);
-        importer.updateOrCreateDatasetFor(CProjects.OPEN_SSL);
-        importer.updateOrCreateDatasetFor(CProjects.WIRESHARK);
-        importer.updateOrCreateDatasetFor(CProjects.SYSTEMD);
+        //importer.updateOrCreateDatasetFor(CProjects.LINUX_KERNEL);
+        //importer.updateOrCreateDatasetFor(CProjects.OPEN_SSL);
+        //importer.updateOrCreateDatasetFor(CProjects.WIRESHARK);
+        Exporter exporter = new Exporter(path);
+
+        //importer.updateOrCreateDatasetFor(CProjects.SYSTEMD);
+        for(Project project: Android.getAndroid()){
+            Data7 data7 =importer.updateOrCreateDatasetFor(project);
+            exporter.exportDatasetToXML(data7);
+        }
     }
 
 }

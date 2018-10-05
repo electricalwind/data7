@@ -61,7 +61,7 @@ public class Exporter {
      */
     public  void saveDataset(Data7 data7) throws IOException {
         Utils.checkFolderDestination(path.getBinaryPath());
-        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getVulnerabilitySet().getProjectName() + "-data7.obj", false);
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getProject().getSavingName() + "-data7.obj", false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
         oos.close();
@@ -195,7 +195,7 @@ public class Exporter {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(path.getXmlPath() + dataset.getProjectName() + "-data7.xml");
+            StreamResult result = new StreamResult(path.getXmlPath() + data7.getProject().getSavingName() + "-data7.xml");
 
             transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");

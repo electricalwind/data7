@@ -28,6 +28,7 @@ public class CProjects {
 
     public static final Project LINUX_KERNEL = new Project(
             "linux_kernel",
+            "linux_kernel",
             "https://github.com/torvalds/linux",
             ".*?(github\\.com|git\\.kernel\\.org).*?(commit)+.*?(h\\=|/)+([a-f0-9]+)",
             4,
@@ -41,6 +42,7 @@ public class CProjects {
 
     public static final Project OPEN_SSL = new Project(
             "openssl",
+            "openssl",
             "https://github.com/openssl/openssl",
             ".*?(git\\.openssl\\.org).*?(commit).*?(h\\=)([a-f0-9]+)",
             4,
@@ -53,6 +55,7 @@ public class CProjects {
 
     public static final Project WIRESHARK = new Project(
             "wireshark",
+            "wireshark",
             "https://github.com/wireshark/wireshark",
             ".*?(github\\.com|code\\.wireshark\\.org).*?(wireshark/commit/|a=commit;h\\=)([a-f0-9]+)",
             3,
@@ -64,6 +67,7 @@ public class CProjects {
     );
 
     public static final Project SYSTEMD = new Project(
+            "systemd",
             "systemd",
             "https://github.com/systemd/systemd",
             ".*?(github\\.com).*?(commit)+.*?(/)+([a-f0-9]+)",

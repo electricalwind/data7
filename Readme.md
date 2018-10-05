@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-![version](https://img.shields.io/badge/data7-1.3-green.svg)
+![version](https://img.shields.io/badge/data7-1.4-green.svg)
 
 ## What is it?
 
@@ -166,12 +166,13 @@ This interface allows to develop more functionality for the dataset such as the 
 
 ## Supported projects
 
-Currently four open source projects are supported :
+Currently five open source projects are supported :
 
 * Linux Kernel
 * Wireshark
 * OpenSSL
 * SystemD
+* **Android (new)**
 
 but it can easily be extended to any other project where it is possible to find the following information:
 

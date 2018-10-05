@@ -29,7 +29,7 @@ import java.io.Serializable;
  * This class contains all information required to generate a data7
  */
 public class Project implements Serializable {
-    private static final long serialVersionUID = 20180531L;
+    private static final long serialVersionUID = 20181004L;
 
     private final String name;
     private final String onlineRepository;
@@ -40,9 +40,11 @@ public class Project implements Serializable {
     private final String bugTracker;
     private final String bugTrackerRegexp;
     private final int indexOfBugIdInBugTracker;
+    private final String savingName;
 
     /**
      * Constructor of the class
+     * @param savingName name of the project to save
      * @param name of the project as reported in the nvd
      * @param onlineRepository url of an available remote git
      * @param regexpOnlineRepo regexp to recognize the hash from an url of remote git
@@ -53,7 +55,8 @@ public class Project implements Serializable {
      * @param bugTrackerRegexp
      * @param indexOfBugIdInBugTracker
      */
-    public Project(String name, String onlineRepository, String regexpOnlineRepo, int indexOfHashInRegexp, String patchInCommitessageRegexp, int indexOfBugIdinCommitMessage, String bugTracker, String bugTrackerRegexp, int indexOfBugIdInBugTracker) {
+    public Project(String savingName,String name, String onlineRepository, String regexpOnlineRepo, int indexOfHashInRegexp, String patchInCommitessageRegexp, int indexOfBugIdinCommitMessage, String bugTracker, String bugTrackerRegexp, int indexOfBugIdInBugTracker) {
+        this.savingName =savingName;
         this.name = name;
         this.onlineRepository = onlineRepository;
         this.regexpOnlineRepo = regexpOnlineRepo;
@@ -63,6 +66,10 @@ public class Project implements Serializable {
         this.bugTracker = bugTracker;
         this.bugTrackerRegexp = bugTrackerRegexp;
         this.indexOfBugIdInBugTracker = indexOfBugIdInBugTracker;
+    }
+
+    public String getSavingName() {
+        return savingName;
     }
 
     /**

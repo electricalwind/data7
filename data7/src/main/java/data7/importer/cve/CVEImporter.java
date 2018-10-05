@@ -173,7 +173,7 @@ public class CVEImporter {
      */
     private  Data7 updatingDataset(Data7 data7, List<String> pathOfXMLFiles, DatasetUpdateListener[] listeners) throws IOException {
         List<CVE> cves = listOfNewCVE(data7.getProject(), pathOfXMLFiles);
-        GitActions git = new GitActions(data7.getProject().getOnlineRepository(), path.getGitPath() + data7.getVulnerabilitySet().getProjectName());
+        GitActions git = new GitActions(data7.getProject().getOnlineRepository(), path.getGitPath() + data7.getProject().getSavingName());
         CVEAnalysis.proceedWithAnalysis(cves, data7, listeners, git);
         GitAnalysis.proceedWithAnalysis(data7, listeners, git);
         git.close();
