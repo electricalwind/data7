@@ -23,7 +23,7 @@
         <dependency>
             <groupId>lu.jimenez.research</groupId>
             <artifactId>data7-gitUtils</artifactId>
-            <version>1.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
