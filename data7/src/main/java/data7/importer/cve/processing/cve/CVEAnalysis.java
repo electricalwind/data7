@@ -9,9 +9,9 @@ package data7.importer.cve.processing.cve;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,18 +21,12 @@ package data7.importer.cve.processing.cve;
  */
 
 
-
-
-import data7.importer.cve.DatasetUpdateListener;
-import data7.model.Data7;
+import data7.importer.Data7Source;
 import data7.model.change.Commit;
-import data7.project.Project;
+import data7.project.MetaInformation;
 import data7.model.vulnerability.Vulnerability;
-import gitUtilitaries.GitActions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,28 +36,23 @@ import static data7.Utils.generateCommitOfInterest;
 /**
  *
  */
-public class CVEAnalysis {
+public class CVEAnalysis extends Data7Source {
 
-    private final List<CVE> cveList;
-    private final Data7 dataset;
-    private final DatasetUpdateListener[] listeners;
-    private final GitActions git;
+    public static String NAME = "CVE ANALYSIS";
 
+    private  final List<CVE> cveList;
 
-    private CVEAnalysis(List<CVE> cveList, Data7 dataset, DatasetUpdateListener[] listeners, GitActions git) {
+    public CVEAnalysis(List<CVE> cveList) {
+        super();
         this.cveList = cveList;
-        this.dataset = dataset;
-        this.git = git;
-        if (listeners == null){
-            this.listeners = new DatasetUpdateListener[0];
-        }else{
-        this.listeners = listeners;}
     }
+
 
     /**
      * Main function to be called
      */
-    private void process() {
+    public void process() {
+
         Map<String, Vulnerability> vd = dataset.getVulnerabilitySet().getVulnerabilityDataset();
         //For each of the cve found in the parsing step
         for (CVE cve : cveList) {
@@ -74,6 +63,11 @@ public class CVEAnalysis {
                 createVulnerability(cve, vd);
             }
         }
+    }
+
+    @Override
+    public String sourceName() {
+        return NAME;
     }
 
     /**
@@ -120,18 +114,60 @@ public class CVEAnalysis {
 
 
     private void handleHashAndBugIds(CVE cve, Vulnerability vulnerability, boolean newEntry) {
+        if(dataset.getUnknownCVEToHash().containsKey(cve.getCVE())){
+            dataset.getUnknownCVEToHash().get(cve.getCVE()).forEach((component,listhash)->{
+                Set<String> strings = cve.getPatchingCommits().getOrDefault(component,new HashSet<>());
+                strings.addAll(listhash);
+                cve.getPatchingCommits().put(component,strings);
+            });
+        }
+
         //for each hash check whether it's already been handled
-        for (String hash : cve.getPatchingCommits()) {
-            if (newEntry || !vulnerability.getPatchingCommits().containsKey(hash)) {
-                addCommitOfInterest(vulnerability, hash);
+        cve.getPatchingCommits().forEach((component, commitList) -> {
+            Map<String, Commit> patching = vulnerability.getPatchingCommits().getOrDefault(component, new HashMap<>());
+            for (String hash : commitList) {
+                if (newEntry || !vulnerability.getPatchingCommits().containsKey(hash)) {
+                    Commit commit = addCommitOfInterest(vulnerability, hash, component);
+                    if (commit != null)
+                        patching.put(hash, commit);
+                }
             }
-        }
+            vulnerability.getPatchingCommits().put(component, patching);
+        });
+
+        cve.getBugsId().forEach((component, bugList) -> {
+            Set<String> bids = vulnerability.getBugIds().getOrDefault(component, new HashSet<>());
+            Map<String, Commit> patching = vulnerability.getPatchingCommits().getOrDefault(component, new HashMap<>());
+            Map<String, List<String>> btc = dataset.getBugToCve().getOrDefault(component, new HashMap<>());
+            Map<String, List<String>> bth = dataset.getBugToHash().getOrDefault(component, new HashMap<>());
+            for (String bugId : bugList) {
+                if (newEntry || !btc.containsKey(bugId)) {
+
+                    if (bth.containsKey(bugId)) {
+                        for (String hash : bth.get(bugId)) {
+                            patching.put(hash, generateCommitOfInterest(gitmap.get(component), hash, true));
+                        }
+                        bids.add(bugId);
+                        bugAddedToVulnerabilityEvent(vulnerability, bugId,component);
+                    }
+                    if (btc.containsKey(bugId)) {
+                        btc.get(bugId).add(vulnerability.getCve());
+                    } else {
+                        List<String> cves = new ArrayList<>();
+                        cves.add(vulnerability.getCve());
+                        btc.put(bugId, cves);
+                    }
+                }
+            }
+            vulnerability.getBugIds().put(component, bids);
+            vulnerability.getPatchingCommits().put(component, patching);
+            dataset.getBugToCve().put(component, btc);
+            dataset.getBugToHash().put(component, bth);
+        });
+
+
         //For each bug add it to the vuln
-        for (String bugId : cve.getBugsId()) {
-            if (newEntry || !dataset.getBugToCve().containsKey(bugId)) {
-                addBugToVuln(vulnerability, bugId);
-            }
-        }
+
     }
 
 
@@ -146,53 +182,46 @@ public class CVEAnalysis {
     }
 
 
-    private void addCommitOfInterest(Vulnerability vulnerability, String hash) {
-        Commit commit = generateCommitOfInterest(git, hash,true);
+    private Commit addCommitOfInterest(Vulnerability vulnerability, String hash, String component) {
+        Commit commit = generateCommitOfInterest(gitmap.get(component), hash, true);
         if (commit != null) {
-            vulnerability.getPatchingCommits().put(hash, commit);
-            String bugId = checkCommitForBugId(commit.getMessage());
+            String bugId = checkCommitForBugId(component, commit.getMessage());
             if (bugId != null) {
-                vulnerability.getBugIds().add(bugId);
-                if (dataset.getBugToCve().containsKey(bugId)) {
-                    dataset.getBugToCve().get(bugId).add(vulnerability.getCve());
+                Set<String> bid = vulnerability.getBugIds().getOrDefault(component, new HashSet<>());
+                bid.add(bugId);
+                vulnerability.getBugIds().put(component, bid);
+
+                Map<String, List<String>> mapbtc = dataset.getBugToCve().getOrDefault(component, new HashMap<>());
+
+                if (mapbtc.containsKey(bugId)) {
+                    mapbtc.get(bugId).add(vulnerability.getCve());
                 } else {
                     List<String> cve = new ArrayList<>();
                     cve.add(vulnerability.getCve());
-                    dataset.getBugToCve().put(bugId, cve);
+                    mapbtc.put(bugId, cve);
                 }
-                if (dataset.getBugToHash().containsKey(bugId)) {
-                    dataset.getBugToHash().get(bugId).add(hash);
+                dataset.getBugToCve().put(component, mapbtc);
+
+
+                Map<String, List<String>> mapbth = dataset.getBugToHash().getOrDefault(component, new HashMap<>());
+
+                if (mapbth.containsKey(bugId)) {
+                    mapbth.get(bugId).add(hash);
                 } else {
                     List<String> hashes = new ArrayList<>();
                     hashes.add(hash);
-                    dataset.getBugToHash().put(bugId, hashes);
+                    mapbth.put(bugId, hashes);
                 }
             }
-            commitAddedToVulnerabilityEvent(vulnerability, hash);
+            commitAddedToVulnerabilityEvent(vulnerability, hash, component);
+            return commit;
         }
+        return null;
     }
 
 
-    private void addBugToVuln(Vulnerability vulnerability, String bugId) {
-        if (dataset.getBugToHash().containsKey(bugId)) {
-            for (String hash : dataset.getBugToHash().get(bugId)) {
-                vulnerability.getPatchingCommits().put(hash, generateCommitOfInterest(git, hash,true));
-            }
-            vulnerability.getBugIds().add(bugId);
-            bugAddedToVulnerabilityEvent(vulnerability, bugId);
-        }
-        if (dataset.getBugToCve().containsKey(bugId)) {
-            dataset.getBugToCve().get(bugId).add(vulnerability.getCve());
-        } else {
-            List<String> cve = new ArrayList<>();
-            cve.add(vulnerability.getCve());
-            dataset.getBugToCve().put(bugId, cve);
-        }
-    }
-
-
-    private String checkCommitForBugId(String message) {
-        Project project = dataset.getProject();
+    private String checkCommitForBugId(String component, String message) {
+        MetaInformation project = dataset.getProject().getSubProjects().get(component);
         if (project.getIndexOfBugIdinCommitMessage() != 0) {
             Pattern pattern = Pattern.compile("[.|\\r|\\n]*" + project.getPatchInCommitessageRegexp());
             Matcher m = pattern.matcher(message);
@@ -202,40 +231,4 @@ public class CVEAnalysis {
         }
         return null;
     }
-
-
-    private void newVulnerabilityEvent(Vulnerability vulnerability) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.addVulnerability(vulnerability);
-        }
-    }
-
-    private void bugAddedToVulnerabilityEvent(Vulnerability vulnerability, String bugId) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.bugAddedTo(vulnerability, bugId);
-        }
-    }
-
-    private void commitAddedToVulnerabilityEvent(Vulnerability vulnerability, String hash) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.commitAddedTo(vulnerability, hash);
-        }
-    }
-
-    private void scoreUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.scoreUpdatedFor(vulnerability);
-        }
-    }
-
-    private void cweUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
-        for (DatasetUpdateListener listener : listeners) {
-            listener.cweUpdatedFor(vulnerability);
-        }
-    }
-
-    public static void proceedWithAnalysis(List<CVE> cveList, Data7 dataset, DatasetUpdateListener[] listeners, GitActions git) {
-        new CVEAnalysis(cveList, dataset, listeners, git).process();
-    }
-
 }

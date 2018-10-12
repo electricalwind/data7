@@ -214,7 +214,7 @@ but it can easily be extended to any other project where it is possible to find 
 3. Once done, just call it as follow:
 
 ```java
- import data7.project.CProjects;
+ import data7.project.singlegit.CProjects;
  import data7.project.Project;   
  import data7.Importer;
  import data7.Exporter;

@@ -1,11 +1,14 @@
 package data7.project;
 
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class Android {
+public class AndroidMetaInf {
 
+    public static final String ANDROID_NVD = "android";
 
-    public static final Project[] getAndroid() {
+    public static final Map<String,MetaInformation> getAndroid() {
         String[] repo = new String[]{
                 "kernel/arm64",
                 "kernel/bcm",
@@ -26,20 +29,19 @@ public class Android {
                 "kernel/x86",
                 "kernel/x86_64",
                 };
-        Project[] projects = new Project[repo.length];
-        for (int i = 0; i < repo.length; i++) {
-            projects[i] = new Project(
-                    repo[i].replaceAll("/", "-"),
-                    "android",
-                    "https://android.googlesource.com/" + repo[i],
-                    ".*?(android\\.googlesource\\.com/" + repo[i] + ").*?(\\+/)([a-f0-9]+)",
+
+        Map<String,MetaInformation> projects = new HashMap<>();
+        for (String aRepo : repo) {
+            projects.put(aRepo, new MetaInformation(
+                    "https://android.googlesource.com/" + aRepo,
+                    ".*?(android\\.googlesource\\.com/" + aRepo + ").*?(\\+/)([a-f0-9]+)",
                     3,
                     ".*?[Bb]ug[ a-zA-Z]*:[ ]*([0-9]+)",
                     1,
                     "https://issuetracker.google.com/",
                     ".*(issuetracker\\.google\\.com).*?(issues\\/)([0-9]+)",
                     3
-            );
+            ));
         }
         return projects;
 

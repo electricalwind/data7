@@ -9,9 +9,9 @@ package data7.project;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,14 +21,15 @@ package data7.project;
  */
 
 
+public class CMetaInf {
 
-import java.util.TreeMap;
+    public static final String LINUX_NVD = "linux_kernel";
+    public static final String OPENSSL_NVD = "openssl";
+    public static final String WIRESHARK_NVD = "wireshark";
+    public static final String SYSTEMD_NVD = "systemd";
 
-public class CProjects {
 
-    public static final Project LINUX_KERNEL = new Project(
-            "linux_kernel",
-            "linux_kernel",
+    public static final MetaInformation LINUX_KERNEL = new MetaInformation(
             "https://github.com/torvalds/linux",
             ".*?(github\\.com|git\\.kernel\\.org).*?(commit)+.*?(h\\=|/)+([a-f0-9]+)",
             4,
@@ -40,9 +41,7 @@ public class CProjects {
     );
 
 
-    public static final Project OPEN_SSL = new Project(
-            "openssl",
-            "openssl",
+    public static final MetaInformation OPEN_SSL = new MetaInformation(
             "https://github.com/openssl/openssl",
             ".*?(git\\.openssl\\.org).*?(commit).*?(h\\=)([a-f0-9]+)",
             4,
@@ -53,9 +52,7 @@ public class CProjects {
             2
     );
 
-    public static final Project WIRESHARK = new Project(
-            "wireshark",
-            "wireshark",
+    public static final MetaInformation WIRESHARK = new MetaInformation(
             "https://github.com/wireshark/wireshark",
             ".*?(github\\.com|code\\.wireshark\\.org).*?(wireshark/commit/|a=commit;h\\=)([a-f0-9]+)",
             3,
@@ -66,9 +63,7 @@ public class CProjects {
             3
     );
 
-    public static final Project SYSTEMD = new Project(
-            "systemd",
-            "systemd",
+    public static final MetaInformation SYSTEMD = new MetaInformation(
             "https://github.com/systemd/systemd",
             ".*?(github\\.com).*?(commit)+.*?(/)+([a-f0-9]+)",
             4,

@@ -23,6 +23,7 @@ package data7.importer.cve.processing.git;
 
 
 
+import data7.project.MetaInformation;
 import data7.project.Project;
 import org.eclipse.jgit.revwalk.RevCommit;
 
@@ -32,10 +33,10 @@ import java.util.regex.Pattern;
 
 public class CommitRegexp implements Callable<MatchingCommit> {
 
-    private final Project project;
+    private final MetaInformation project;
     private final RevCommit revCommit;
 
-    CommitRegexp(Project project, RevCommit revCommit) {
+    CommitRegexp(MetaInformation project, RevCommit revCommit) {
         this.project = project;
         this.revCommit = revCommit;
     }

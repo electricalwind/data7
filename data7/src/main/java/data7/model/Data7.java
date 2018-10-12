@@ -32,7 +32,7 @@ import java.util.*;
  * The Data7 (pronounce dataset) class
  */
 public class Data7 implements Serializable {
-    private static final long serialVersionUID = 20180531L;
+    private static final long serialVersionUID = 20181011L;
 
     //Built Vulnerability dataSet
     private final VulnerabilitySet vulnerabilitySet;
@@ -41,16 +41,16 @@ public class Data7 implements Serializable {
     private final Project project;
 
     //Map that link bug id from the bug tracker to  CVE vulnerability Numbers
-    private final Map<String, List<String>> bugToCve;
+    private final Map<String, Map<String,List<String>>> bugToCve;
 
     //Map that link a bug id from the bug tracker to a commit hash
-    private final Map<String, List<String>> bugToHash;
+    private final Map<String, Map<String,List<String>>> bugToHash;
 
     //Map that link a cve number that have yet to be declared to a commit hash
-    private final Map<String, List<String>> unknownCVEToHash;
+    private final Map<String,Map<String,List<String>>> unknownCVEToHash;
 
     //Set of All commit that have been processed
-    private final Set<String> alreadyProcessedHash;
+    private final Map<String,Set<String>> alreadyProcessedHash;
 
     /**
      * Constructor for the data7 only the project is required
@@ -60,7 +60,7 @@ public class Data7 implements Serializable {
         vulnerabilitySet = new VulnerabilitySet(project.getName());
         bugToCve = new HashMap<>();
         bugToHash = new HashMap<>();
-        alreadyProcessedHash = new HashSet<>();
+        alreadyProcessedHash = new HashMap<>();
         unknownCVEToHash = new HashMap<>();
     }
 
@@ -83,28 +83,28 @@ public class Data7 implements Serializable {
     /**
      * @return a map that link bug id as identified in the bug tracker to cve identifiers
      */
-    public Map<String, List<String>> getBugToCve() {
+    public Map<String, Map<String, List<String>>> getBugToCve() {
         return bugToCve;
     }
 
     /**
      * @return a map that link bug id as identified in the bug tracker to the commit hashes that fix it
      */
-    public Map<String, List<String>> getBugToHash() {
+    public Map<String, Map<String, List<String>>> getBugToHash() {
         return bugToHash;
     }
 
     /**
      * @return the list of all commits that already have been processed
      */
-    public Set<String> getAlreadyProcessedHash() {
+    public Map<String, Set<String>> getAlreadyProcessedHash() {
         return alreadyProcessedHash;
     }
 
     /**
      * @return a map of all CVE that were not detected by the cve parser but were found in a commit message (e.g., cve that have not been disclosed yet)
      */
-    public Map<String, List<String>> getUnknownCVEToHash() {
+    public Map<String, Map<String, List<String>>> getUnknownCVEToHash() {
         return unknownCVEToHash;
     }
 

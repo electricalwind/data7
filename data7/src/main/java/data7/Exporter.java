@@ -59,34 +59,13 @@ public class Exporter {
      * @param data7 to save as binary
      * @throws IOException
      */
-    public  void saveDataset(Data7 data7) throws IOException {
+    public void saveDataset(Data7 data7) throws IOException {
         Utils.checkFolderDestination(path.getBinaryPath());
-        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getProject().getSavingName() + "-data7.obj", false);
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getProject().getName() + "-data7.obj", false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
         oos.close();
         fos.close();
-    }
-
-    /**
-     * Method to load the data7 of a given project that have been save in its binary form
-     *
-     * @return Data7
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public  Data7 loadDataset(String project) throws IOException, ClassNotFoundException {
-        File file = new File(path.getBinaryPath() + project + "-data7.obj");
-        if (file.exists()) {
-            FileInputStream fileIn = new FileInputStream(file);
-            ObjectInputStream read = new ObjectInputStream(fileIn);
-            Data7 data = (Data7) read.readObject();
-            read.close();
-            fileIn.close();
-            return data;
-        } else {
-            return null;
-        }
     }
 
 
@@ -117,7 +96,7 @@ public class Exporter {
 
             for (Map.Entry<String, Vulnerability> vuln :
                     dataset.getVulnerabilityDataset().entrySet()
-                    ) {
+            ) {
                 if (vuln.getValue().getPatchingCommits().size() > 0) {
 
                     Element cve = doc.createElement("cve");
@@ -150,42 +129,50 @@ public class Exporter {
                     cve.appendChild(versions);
 
                     Element bugsId = doc.createElement("bugs");
-                    for (String id : vuln.getValue().getBugIds()) {
-                        Element bugId = doc.createElement("id");
-                        bugId.appendChild(doc.createTextNode(id));
-                        bugsId.appendChild(bugId);
-                    }
+                    vuln.getValue().getBugIds().forEach((component, listid) -> {
+                        Element componentel = doc.createElement(component);
+                        for (String id : listid) {
+                            Element bugId = doc.createElement("id");
+                            bugId.appendChild(doc.createTextNode(id));
+                            componentel.appendChild(bugId);
+                        }
+                        bugsId.appendChild(componentel);
+                    });
+
                     cve.appendChild(bugsId);
 
                     Element patchs = doc.createElement("patches");
-                    for (Map.Entry<String, Commit> fix : vuln.getValue().getPatchingCommits().entrySet()) {
-                        Element patch = doc.createElement("commit");
-                        patch.setAttribute("hash", fix.getKey());
-                        patch.setAttribute("timestamp", String.valueOf(fix.getValue().getTimestamp()));
+                    vuln.getValue().getPatchingCommits().forEach((component, listpatches) -> {
+                        Element componentel = doc.createElement(component);
+                        for (Map.Entry<String, Commit> fix : listpatches.entrySet()) {
+                            Element patch = doc.createElement("commit");
+                            patch.setAttribute("hash", fix.getKey());
+                            patch.setAttribute("timestamp", String.valueOf(fix.getValue().getTimestamp()));
 
-                        Element message = doc.createElement("message");
-                        message.appendChild(doc.createTextNode(fix.getValue().getMessage()));
-                        patch.appendChild(message);
+                            Element message = doc.createElement("message");
+                            message.appendChild(doc.createTextNode(fix.getValue().getMessage()));
+                            patch.appendChild(message);
 
-                        Element files = doc.createElement("files");
-                        for (FileFix fileFix : fix.getValue().getFixes()) {
-                            Element file = doc.createElement("file");
-                            Element before = doc.createElement("before");
-                            before.setAttribute("path", fileFix.getFileBefore().getFilePath());
-                            before.setAttribute("hash", fileFix.getOldHash());
-                            before.appendChild(doc.createTextNode(fileFix.getFileBefore().getFileContent()));
-                            file.appendChild(before);
+                            Element files = doc.createElement("files");
+                            for (FileFix fileFix : fix.getValue().getFixes()) {
+                                Element file = doc.createElement("file");
+                                Element before = doc.createElement("before");
+                                before.setAttribute("path", fileFix.getFileBefore().getFilePath());
+                                before.setAttribute("hash", fileFix.getOldHash());
+                                before.appendChild(doc.createTextNode(fileFix.getFileBefore().getFileContent()));
+                                file.appendChild(before);
 
-                            Element after = doc.createElement("after");
-                            after.setAttribute("path", fileFix.getFileAfter().getFilePath());
-                            after.appendChild(doc.createTextNode(fileFix.getFileAfter().getFileContent()));
-                            file.appendChild(after);
-                            files.appendChild(file);
+                                Element after = doc.createElement("after");
+                                after.setAttribute("path", fileFix.getFileAfter().getFilePath());
+                                after.appendChild(doc.createTextNode(fileFix.getFileAfter().getFileContent()));
+                                file.appendChild(after);
+                                files.appendChild(file);
+                            }
+                            patch.appendChild(files);
+                            componentel.appendChild(patch);
                         }
-                        patch.appendChild(files);
-                        patchs.appendChild(patch);
-
-                    }
+                        patchs.appendChild(componentel);
+                    });
                     cve.appendChild(patchs);
 
 
@@ -195,7 +182,7 @@ public class Exporter {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(path.getXmlPath() + data7.getProject().getSavingName() + "-data7.xml");
+            StreamResult result = new StreamResult(path.getXmlPath() + data7.getProject().getName() + "-data7.xml");
 
             transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -237,7 +224,7 @@ public class Exporter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public  List<CWE> loadCWEMist() throws IOException, ClassNotFoundException {
+    public List<CWE> loadCWEMist() throws IOException, ClassNotFoundException {
         File file = new File(path.getBinaryPath() + CWE_OBJ);
         if (file.exists()) {
             FileInputStream fileIn = new FileInputStream(file);

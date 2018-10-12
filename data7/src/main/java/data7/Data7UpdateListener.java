@@ -1,4 +1,4 @@
-package data7.importer.cve;
+package data7;
 
 /*-
  * #%L
@@ -26,11 +26,11 @@ import data7.model.vulnerability.Vulnerability;
 
 import java.util.EventListener;
 
-public interface DatasetUpdateListener extends EventListener {
+public interface Data7UpdateListener extends EventListener {
 
-    void bugAddedTo(Vulnerability vulnerability, String bugId);
+    void bugAddedTo(Vulnerability vulnerability, String bugId, String component);
 
-    void commitAddedTo(Vulnerability vulnerability, String hash);
+    void commitAddedTo(Vulnerability vulnerability, String hash, String component);
 
     void scoreUpdatedFor(Vulnerability vulnerability);
 

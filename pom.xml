@@ -7,7 +7,7 @@
     <groupId>lu.jimenez.research</groupId>
     <artifactId>data7-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.4</version>
+    <version>1.99-SNAPSHOT</version>
 
     <url>https://github.com/electricalwind/data7</url>
 
@@ -23,7 +23,7 @@
 
     <properties>
         <header.path>${basedir}/HEADER</header.path>
-        <project.version>1.4</project.version>
+        <project.version>1.99-SNAPSHOT</project.version>
     </properties>
 
     <developers>

@@ -9,9 +9,9 @@ package data7.importer.cve.processing.cve;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,9 +21,8 @@ package data7.importer.cve.processing.cve;
  */
 
 
-
-
 import data7.Utils;
+import data7.project.MetaInformation;
 import data7.project.Project;
 
 import javax.xml.namespace.QName;
@@ -36,10 +35,7 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,8 +72,8 @@ public class CVEParser implements Callable<List<CVE>> {
         Set<String> versions = new HashSet<>();
         boolean softstudy = false;
         String score = "";
-        List<String> bugId = new ArrayList<>();
-        List<String> commit = new ArrayList<>();
+        Map<String, List<String>> bugId = new HashMap<>();
+        Map<String, Set<String>> commit = new HashMap<>();
         long lastModified = 0;
         long creationTime = 0;
 
@@ -100,10 +96,10 @@ public class CVEParser implements Callable<List<CVE>> {
                         cwe = "";
                         summary = "";
                         score = "";
-                        versions= new HashSet<>();
+                        versions = new HashSet<>();
                         lastModified = 0;
-                        bugId = new ArrayList<>();
-                        commit = new ArrayList<>();
+                        bugId = new HashMap<>();
+                        commit = new HashMap<>();
                         cve = idAttr.getValue();
                         break;
                     case "last-modified-datetime":
@@ -128,7 +124,7 @@ public class CVEParser implements Callable<List<CVE>> {
                                     Matcher m = softwareMatch(soft);
                                     if (m.find()) {
                                         soft = m.group(1);
-                                        if (soft.compareTo(project.getName()) == 0){
+                                        if (soft.compareTo(project.getName()) == 0) {
                                             versions.add(m.group(2));
                                             softstudy = true;
                                         }
@@ -145,7 +141,7 @@ public class CVEParser implements Callable<List<CVE>> {
                                 Matcher m = softwareMatch(xmlEvent.asCharacters().getData());
                                 if (m.find()) {
                                     String soft = m.group(1);
-                                    if (soft.compareTo(project.getName()) == 0){
+                                    if (soft.compareTo(project.getName()) == 0) {
                                         versions.add(m.group(2));
                                         softstudy = true;
                                     }
@@ -175,17 +171,32 @@ public class CVEParser implements Callable<List<CVE>> {
                         if (idAttr != null) {
                             String link = idAttr.getValue();
                             //commit
-                            Matcher m = gitMatch(link, project);
-                            if (m.find() && softstudy) {
-                                String ha = m.group(project.getIndexOfHashInRegexp());
-                                if (ha.length() > 6) {
-                                    commit.add(ha);
+                            for (Map.Entry<String, MetaInformation> sub : project.getSubProjects().entrySet()) {
+                                Matcher m = gitMatch(link, sub.getValue());
+                                if (m.find() && softstudy) {
+                                    String ha = m.group(sub.getValue().getIndexOfHashInRegexp());
+                                    if (ha.length() > 6) {
+                                        if (commit.containsKey(sub.getKey())) {
+                                            commit.get(sub.getKey()).add(ha);
+                                        } else {
+                                            Set<String> commitList = new HashSet<>();
+                                            commitList.add(ha);
+                                            commit.put(sub.getKey(), commitList);
+                                        }
+                                    }
                                 }
-                            }
-                            //bug
-                            m = btMatch(link, project);
-                            if (m.find() && softstudy) {
-                                bugId.add(m.group(project.getIndexOfBugIdInBugTracker()));
+                                //bug
+                                m = btMatch(link, sub.getValue());
+                                if (m.find() && softstudy) {
+                                    String bid = m.group(sub.getValue().getIndexOfBugIdInBugTracker());
+                                    if (bugId.containsKey(sub.getKey())) {
+                                        bugId.get(sub.getKey()).add(bid);
+                                    } else {
+                                        List<String> bids = new ArrayList<>();
+                                        bids.add(bid);
+                                        bugId.put(sub.getKey(), bids);
+                                    }
+                                }
                             }
                         }
                         break;
@@ -224,7 +235,7 @@ public class CVEParser implements Callable<List<CVE>> {
      * @param url: url to check
      * @return Matcher
      */
-    private Matcher gitMatch(String url, Project pI) {
+    private Matcher gitMatch(String url, MetaInformation pI) {
         Pattern p = Pattern.compile(pI.getRegexpOnlineRepo(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         return p.matcher(url);
     }
@@ -235,7 +246,7 @@ public class CVEParser implements Callable<List<CVE>> {
      * @param url: url to check
      * @return Matcher
      */
-    private Matcher btMatch(String url, Project pI) {
+    private Matcher btMatch(String url, MetaInformation pI) {
         Pattern p = Pattern.compile(pI.getBugTrackerRegexp(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         return p.matcher(url);
     }

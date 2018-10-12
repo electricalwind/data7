@@ -22,24 +22,34 @@ package data7.project;
 
 
 
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
-import static data7.project.CProjects.*;
+import static data7.project.AndroidMetaInf.ANDROID_NVD;
+import static data7.project.AndroidMetaInf.getAndroid;
+import static data7.project.CMetaInf.*;
 
 public class ProjectFactory {
 
 
 
     public static Project retrieveProjectInfo(String name) {
+        Map<String,MetaInformation> mapProject = new HashMap<>();
         switch (name) {
-            case "linux_kernel":
-                return LINUX_KERNEL;
-            case "openssl":
-                return OPEN_SSL;
-            case "wireshark":
-                return WIRESHARK;
-            case "systemd":
-                return SYSTEMD;
+            case LINUX_NVD:
+                mapProject.put(LINUX_NVD,LINUX_KERNEL);
+                return new Project(LINUX_NVD,mapProject);
+            case OPENSSL_NVD:
+                mapProject.put(OPENSSL_NVD,OPEN_SSL);
+                return new Project(OPENSSL_NVD,mapProject);
+            case WIRESHARK_NVD:
+                mapProject.put(WIRESHARK_NVD,WIRESHARK);
+                return new Project(WIRESHARK_NVD,mapProject);
+            case SYSTEMD_NVD:
+                mapProject.put(SYSTEMD_NVD,SYSTEMD);
+                return new Project(SYSTEMD_NVD,mapProject);
+            case ANDROID_NVD:
+                return new Project(ANDROID_NVD,getAndroid());
             default:
                 return null;
         }
