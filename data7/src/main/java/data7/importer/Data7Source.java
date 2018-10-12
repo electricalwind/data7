@@ -9,64 +9,64 @@ import java.util.Map;
 
 public abstract class Data7Source {
 
+    // Data7 object
     protected  Data7 dataset;
+    // Listeners
     private  Data7UpdateListener[] listeners;
+    // Git per Component
     protected  Map<String, GitActions> gitmap;
-
-
-    protected Data7Source(){}
 
 
     public abstract void process();
 
-
     public abstract String sourceName();
 
-    public Data7 getDataset() {
-        return dataset;
-    }
+    /**
+     * Setters
+     */
 
-    private Map<String, GitActions> getGitmap() {
-        return gitmap;
-    }
-
-    void setDataset(Data7 dataset) {
+    final void setDataset(Data7 dataset) {
         this.dataset = dataset;
     }
 
-    void setListeners(Data7UpdateListener[] listeners) {
+    final void setListeners(Data7UpdateListener[] listeners) {
         this.listeners = listeners;
     }
 
-    void setGitmap(Map<String, GitActions> gitmap) {
+    final void setGitmap(Map<String, GitActions> gitmap) {
         this.gitmap = gitmap;
     }
 
-    protected void newVulnerabilityEvent(Vulnerability vulnerability) {
+
+    /**
+     * Listeners Handling
+     */
+
+    protected final void newVulnerabilityEvent(Vulnerability vulnerability) {
         for (Data7UpdateListener listener : listeners) {
             listener.addVulnerability(vulnerability);
         }
     }
 
-    protected void bugAddedToVulnerabilityEvent(Vulnerability vulnerability, String bugId,String component) {
+    protected final void bugAddedToVulnerabilityEvent(Vulnerability vulnerability, String bugId,String component) {
         for (Data7UpdateListener listener : listeners) {
             listener.bugAddedTo(vulnerability, bugId, component);
         }
     }
 
-    protected void commitAddedToVulnerabilityEvent(Vulnerability vulnerability, String hash, String component) {
+    protected final void commitAddedToVulnerabilityEvent(Vulnerability vulnerability, String hash, String component) {
         for (Data7UpdateListener listener : listeners) {
             listener.commitAddedTo(vulnerability, hash,component);
         }
     }
 
-    protected void scoreUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
+    protected final void scoreUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
         for (Data7UpdateListener listener : listeners) {
             listener.scoreUpdatedFor(vulnerability);
         }
     }
 
-    protected void cweUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
+    protected final void cweUpdatedForVulnerabilityEvent(Vulnerability vulnerability) {
         for (Data7UpdateListener listener : listeners) {
             listener.cweUpdatedFor(vulnerability);
         }

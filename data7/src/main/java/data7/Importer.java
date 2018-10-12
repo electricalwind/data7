@@ -23,7 +23,7 @@ package data7;
 
 import data7.importer.Data7Importer;
 import data7.model.Data7;
-import data7.project.CMetaInf;
+import data7.project.AndroidMetaInf;
 import data7.project.Project;
 import data7.project.ProjectFactory;
 
@@ -61,7 +61,7 @@ public class Importer {
         Importer importer = new Importer(path);
 
 
-        Data7 data7 = importer.generateGenericProject(CMetaInf.SYSTEMD_NVD);
+        Data7 data7 = importer.generateGenericProject(AndroidMetaInf.ANDROID_NVD);
         Exporter exporter = new Exporter(path);
         exporter.exportDatasetToXML(data7);
         int i = 0;

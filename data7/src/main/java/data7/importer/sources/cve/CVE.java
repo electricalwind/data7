@@ -1,4 +1,4 @@
-package data7.importer.cve.processing.cve;
+package data7.importer.sources.cve;
 
 /*-
  * #%L
@@ -27,33 +27,35 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * CVE class to use as intermediate representation (after parsing, before integration into data7)
  */
 public class CVE {
 
-    //
+    // cve identifier
     private final String CVE;
 
-    //
+    // type of vulnerability
     private String CWE;
 
-    //
+    // severity of the vulnerability (CVSS)
     private final String score;
 
-    //
+    // description of the vulnerability as reported in the NVD
     private final String description;
 
-    //
+    // timestamp of the last vulnerability modification
     private final long lastModified;
 
-    //
+    // map of the commit hash that patched the vulnerability per components
     private  Map<String,Set<String>> patchingCommits;
 
-    //
+    // map of the bug identifier that correspond to the vulnerability per components
     private Map<String,List<String>> bugsId;
 
+    // timestamp of the  vulnerability report creation
     private final long creationTime;
 
+    // version of the project impacted by the vulnerability
     private final Set<String> versions;
 
 

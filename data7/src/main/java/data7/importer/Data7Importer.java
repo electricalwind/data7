@@ -3,10 +3,10 @@ package data7.importer;
 import data7.Data7UpdateListener;
 import data7.Exporter;
 import data7.ResourcesPath;
-import data7.importer.cve.processing.cve.CVE;
-import data7.importer.cve.processing.cve.CVEAnalysis;
-import data7.importer.cve.processing.cve.CVEParser;
-import data7.importer.cve.processing.git.GitAnalysis;
+import data7.importer.sources.cve.CVE;
+import data7.importer.sources.cve.CVEAnalysis;
+import data7.importer.sources.cve.CVEParser;
+import data7.importer.sources.git.GitAnalysis;
 import data7.model.Data7;
 import data7.project.Project;
 import gitUtilitaries.GitActions;
@@ -28,73 +28,111 @@ import static data7.Utils.dateToLongWoM;
 
 public class Data7Importer {
 
+    // Ressource Path
     private final ResourcesPath path;
+    // Project Information
     private final Project project;
+    // Listeners
     private final Data7UpdateListener[] listeners;
+    // Source of Informations
     private final LinkedList<Data7Source> sources;
 
+    /**
+     * Constructor of the importer
+     * @param path to use
+     * @param project considered
+     * @param listeners to apply
+     */
     public Data7Importer(ResourcesPath path, Project project, Data7UpdateListener... listeners) {
         this.path = path;
+
         if (project != null) {
             this.project = project;
         } else {
             throw new RuntimeException("Project is null");
         }
+
         if (listeners == null) {
             this.listeners = new Data7UpdateListener[0];
         } else {
             this.listeners = listeners;
         }
+
         sources = new LinkedList<>();
+        sources.add(new GitAnalysis());
+
     }
 
-    public void addSource(Data7Source source, int position) {
-        if (!source.sourceName().equals(CVEAnalysis.NAME) && !source.sourceName().equals(GitAnalysis.NAME) && position > 0 && position < sources.size()) {
-            sources.add(source);
-        }
-    }
-
+    /**
+     * Add a source of information
+     * @param source
+     */
     public void addSource(Data7Source source) {
         if (!source.sourceName().equals(CVEAnalysis.NAME) && !source.sourceName().equals(GitAnalysis.NAME)) {
-            sources.add(source);
+            sources.add(sources.size()-1,source);
         }
     }
 
-    public List<String> getSources() {
+    /**
+     * @return the list of All additional sources
+     */
+    public List<String> getAdditionalSources() {
         return sources.stream().map(Data7Source::sourceName).collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public Data7 updateOrCreateDataset() throws ParseException, IOException, ClassNotFoundException {
+        //Load Data7 object
         Data7 data7 = loadDataset();
         List<String> pathOfXMLFiles;
+        //if no existing dataset
         if (data7 == null) {
+            //download all cves feed
             pathOfXMLFiles = downloadAllXML();
             data7 = new Data7(project);
         } else {
+            //download only necessary feed
             long currentTime = System.currentTimeMillis();
             pathOfXMLFiles = dowloadRecentXML(data7.getVulnerabilitySet().getLastUpdated(), currentTime);
             data7.getVulnerabilitySet().setLastUpdated(currentTime);
         }
+        //parse the feed
         List<CVE> cves = listOfNewCVE(pathOfXMLFiles);
+
+        //clone the git
         Map<String, GitActions> git = new HashMap<>();
         data7.getProject().getSubProjects().forEach((component, metainf) -> {
             git.put(component, new GitActions(metainf.getOnlineRepository(), path.getGitPath() + component));
         });
 
-        sources.addFirst(new CVEAnalysis(cves));
-        sources.addLast(new GitAnalysis());
+        //Source To proceed with
+        LinkedList<Data7Source> listOfSources = new LinkedList<>();
+        //Mandatory
+        listOfSources.add(new CVEAnalysis(cves));
+        //Optional ones except git analysis
+        listOfSources.addAll(sources);
 
+        //Lambda ...
         Data7 finalData = data7;
 
-        sources.forEach((source) -> {
+        //Setting up each source and proceed with the analysis
+        listOfSources.forEach((source) -> {
             source.setDataset(finalData);
             source.setListeners(listeners);
             source.setGitmap(git);
             source.process();
         });
 
+        //Exporting the result
         Exporter exporter = new Exporter(path);
         exporter.saveDataset(data7);
+        git.values().forEach(GitActions::close);
         return finalData;
     }
 
@@ -114,6 +152,8 @@ public class Data7Importer {
     }
 
     /**
+     * Method that download only required files, if less than 7 days since last update then only modified and recent feed
+     * are downloaded, otherwise the last update of each year feed is checked against the last update of the dataset
      * @param lastUpdated
      * @param currentTime
      * @return
@@ -137,6 +177,7 @@ public class Data7Importer {
     }
 
     /**
+     * Check the last update of a year feed against the last update of the dataset
      * @param year
      * @param lastUpdate
      * @return
@@ -155,6 +196,7 @@ public class Data7Importer {
     }
 
     /**
+     * Download the feed for a given year
      * @param year
      * @return
      * @throws IOException
@@ -170,6 +212,7 @@ public class Data7Importer {
     }
 
     /**
+     * Retrieve the list of cve from all considered feed
      * @param pathOfXMLFiles
      * @return
      */

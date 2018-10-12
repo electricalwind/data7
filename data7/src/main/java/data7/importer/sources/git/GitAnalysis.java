@@ -1,4 +1,4 @@
-package data7.importer.cve.processing.git;
+package data7.importer.sources.git;
 
 /*-
  * #%L

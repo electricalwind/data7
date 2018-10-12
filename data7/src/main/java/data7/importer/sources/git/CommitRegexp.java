@@ -1,4 +1,4 @@
-package data7.importer.cve.processing.git;
+package data7.importer.sources.git;
 
 /*-
  * #%L
@@ -24,7 +24,6 @@ package data7.importer.cve.processing.git;
 
 
 import data7.project.MetaInformation;
-import data7.project.Project;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.concurrent.Callable;

@@ -1,4 +1,4 @@
-package data7.importer.cve.processing.cve;
+package data7.importer.sources.cve;
 
 /*-
  * #%L
