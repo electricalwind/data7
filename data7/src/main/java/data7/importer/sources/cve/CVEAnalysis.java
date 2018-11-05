@@ -126,7 +126,7 @@ public class CVEAnalysis extends Data7Source {
         cve.getPatchingCommits().forEach((component, commitList) -> {
             Map<String, Commit> patching = vulnerability.getPatchingCommits().getOrDefault(component, new HashMap<>());
             for (String hash : commitList) {
-                if (newEntry || !vulnerability.getPatchingCommits().containsKey(hash)) {
+                if (newEntry || !patching.containsKey(hash)) {
                     Commit commit = addCommitOfInterest(vulnerability, hash, component);
                     if (commit != null)
                         patching.put(hash, commit);
