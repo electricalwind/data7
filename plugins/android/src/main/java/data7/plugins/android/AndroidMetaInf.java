@@ -8,6 +8,7 @@ import java.util.Map;
 public class AndroidMetaInf {
     public static final String ANDROID_NVD = "android";
 
+
     public static final Map<String, MetaInformation> getAndroid() {
         String[] repo = new String[]{
                 "kernel/arm64",
