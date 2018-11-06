@@ -43,6 +43,7 @@
         <module>utilitaries/gitUtils</module>
         <module>utilitaries/misc</module>
         <module>data7</module>
+        <module>plugins/android</module>
     </modules>
 
     <build>

@@ -64,7 +64,6 @@ public class Importer {
         Data7 data7 = importer.generateGenericProject(AndroidMetaInf.ANDROID_NVD);
         Exporter exporter = new Exporter(path);
         exporter.exportDatasetToXML(data7);
-        int i = 0;
     }
 
 }
