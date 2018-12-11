@@ -44,6 +44,12 @@ Other dependencies are handled through maven.
 
 ## How does it work ?
 
+First compile everything:
+
+    git clone https://github.com/electricalwind/data7/
+    cd data7/
+    mvn install
+
 For a given project P
 
 * Creating a dataset
