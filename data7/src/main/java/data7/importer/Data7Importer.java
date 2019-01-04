@@ -260,8 +260,7 @@ public class Data7Importer {
      * @throws ClassNotFoundException
      */
     public Data7 loadDataset() throws IOException, ClassNotFoundException {
-        Path file_path = path.getBinaryPath().resolve(project + "-data7.obj");
-        File file = file_path.toFile();
+        File file = path.getBinaryPath().resolve(project + "-data7.obj").toFile();
         if (file.exists()) {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream read = new ObjectInputStream(fileIn);
