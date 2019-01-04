@@ -214,28 +214,30 @@ but it can easily be extended to any other project where it is possible to find 
 3. Once done, just call it as follow:
 
 ```java
- import data7.project.singlegit.CProjects;
+ import data7.project.CMetaInf;
  import data7.project.Project;   
  import data7.Importer;
  import data7.Exporter;
  import data7.ResourcesPath;
+ import data7.model.Data7;
  
- //Indicate your path
- ResourcesPath path = new ResourcesPath("path to your folder");
+ class Foo{
+ 	public static void main(String[] args){
+	//Indicate your path
+	ResourcesPath path = new ResourcesPath("path to your folder");
 
- //To create or update a project
-Importer importer = new Importer(path);
-importer.updateOrCreateDatasetFor(aProject);
-// Projects are available in projects module
-//like CProjects.LINUX_KERNEL
+	//To create or update a project
+	Importer importer = new Importer(path);
+	Data7 data7 = importer.generateGenericProject(aProject);
+	// Projects are available in projects module
+	//like CMetaInf.LINUX_KERNEL
 
-//To simply load a dataset without any update
-Exporter exporter = new Exporter(path);
-exporter.loadDataset(project);
-// here just the name (String) is enough
-
-// To export to xml
-exporter.exportDatasetToXML(data7);
+	//To simply load a dataset without any update
+	Exporter exporter = new Exporter(path);
+	// To export to xml
+	exporter.exportDatasetToXML(data7);
+	}
+}
 
 ``` 
     
