@@ -14,6 +14,7 @@ import miscUtils.Misc;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.time.Year;
 import java.util.*;
@@ -108,7 +109,7 @@ public class Data7Importer {
         //clone the git
         Map<String, GitActions> git = new HashMap<>();
         data7.getProject().getSubProjects().forEach((component, metainf) -> {
-            git.put(component, new GitActions(metainf.getOnlineRepository(), path.getGitPath() + component));
+            git.put(component, new GitActions(metainf.getOnlineRepository(), path.getGitPath().resolve(component).toString()));
         });
 
         //Source To proceed with
@@ -185,8 +186,8 @@ public class Data7Importer {
      * @throws ParseException
      */
     private boolean checkMetaIfNewerThan(String year, long lastUpdate) throws IOException, ParseException {
-        Misc.downloadFromURL(CVE_URL + year + META, path.getCvePath());
-        File meta = new File(path.getCvePath() + FILE_START + year + META);
+        Misc.downloadFromURL(CVE_URL + year + META, path.getCvePath().toString());
+        File meta = path.getCvePath().resolve(FILE_START + year + META).toFile();
         BufferedReader brTest = new BufferedReader(new FileReader(meta));
         String date = brTest.readLine();
         date = date.replace("lastModifiedDate:", "");
@@ -202,13 +203,13 @@ public class Data7Importer {
      * @throws IOException
      */
     private String downloadCVEXML(String year) throws IOException {
-        checkFolderDestination(path.getCvePath());
-        Misc.downloadFromURL(CVE_URL + year + XML, path.getCvePath());
-        String fpath = path.getCvePath() + FILE_START + year + XML;
-        File zip = new File(fpath);
-        Misc.unzipping(fpath, path.getCvePath());
-        Files.delete(zip.toPath());
-        return fpath.replace(".zip", "");
+        checkFolderDestination(path.getCvePath().toString());
+        Misc.downloadFromURL(CVE_URL + year + XML, path.getCvePath().toString());
+        Path fpath = path.getCvePath().resolve(FILE_START + year + XML);
+        File zip = fpath.toFile();
+        Misc.unzipping(fpath.toString(), path.getCvePath().toString());
+        Files.delete(fpath);
+        return fpath.toString().replace(".zip", "");
     }
 
     /**
@@ -259,7 +260,7 @@ public class Data7Importer {
      * @throws ClassNotFoundException
      */
     public Data7 loadDataset() throws IOException, ClassNotFoundException {
-        File file = new File(path.getBinaryPath() + project + "-data7.obj");
+        File file = path.getBinaryPath().resolve(project + "-data7.obj").toFile();
         if (file.exists()) {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream read = new ObjectInputStream(fileIn);

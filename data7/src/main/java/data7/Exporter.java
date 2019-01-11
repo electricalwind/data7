@@ -60,8 +60,8 @@ public class Exporter {
      * @throws IOException
      */
     public void saveDataset(Data7 data7) throws IOException {
-        Utils.checkFolderDestination(path.getBinaryPath());
-        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + data7.getProject().getName() + "-data7.obj", false);
+        Utils.checkFolderDestination(path.getBinaryPath().toString());
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath().resolve(data7.getProject().getName() + "-data7.obj").toString(), false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(data7);
         oos.close();
@@ -77,7 +77,7 @@ public class Exporter {
      */
     public void exportDatasetToXML(Data7 data7) {
         VulnerabilitySet dataset = data7.getVulnerabilitySet();
-        Utils.checkFolderDestination(path.getXmlPath());
+        Utils.checkFolderDestination(path.getXmlPath().toString());
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -182,7 +182,7 @@ public class Exporter {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(path.getXmlPath() + data7.getProject().getName() + "-data7.xml");
+            StreamResult result = new StreamResult(path.getXmlPath().resolve(data7.getProject().getName() + "-data7.xml").toString());
 
             transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -210,7 +210,7 @@ public class Exporter {
      * @throws IOException
      */
     public void saveCWEList(List<CWE> cweList) throws IOException {
-        FileOutputStream fos = new FileOutputStream(path.getBinaryPath() + CWE_OBJ, false);
+        FileOutputStream fos = new FileOutputStream(path.getBinaryPath().resolve(CWE_OBJ).toString(), false);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(cweList);
         oos.close();
@@ -225,7 +225,7 @@ public class Exporter {
      * @throws ClassNotFoundException
      */
     public List<CWE> loadCWEMist() throws IOException, ClassNotFoundException {
-        File file = new File(path.getBinaryPath() + CWE_OBJ);
+        File file = path.getBinaryPath().resolve(CWE_OBJ).toFile();
         if (file.exists()) {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream read = new ObjectInputStream(fileIn);
