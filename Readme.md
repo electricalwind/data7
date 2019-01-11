@@ -42,6 +42,13 @@ Thus, the link should be made automatically and not manually which is possible b
 To create and update a dataset an internet connection is required. However nothing is required to read an existing data7.
 Other dependencies are handled through maven.
 
+## Setting Things Up 
+ 
+ ```
+ git clone https://github.com/electricalwind/data7/
+ cd data7/
+ mvn install
+ ```
 ## How does it work ?
 
 For a given project P
